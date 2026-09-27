@@ -48,7 +48,6 @@ chore/<short-name>
 - `main` 通过分支保护或等价规则保护；
 - 变更通过 PR 进入 `main`；
 - 仅使用 Squash Merge；
-- 最终合并仅由仓库所有者 `MC0571` 执行；
 - Contributor 或 Agent 不得绕过 branch protection、required checks 或 review gate。
 
 PR 应保持单一目的，标题应直接说明改动。

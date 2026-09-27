@@ -136,4 +136,4 @@ Before contributing, read:
 
 ## License
 
-This repository does not currently contain a LICENSE file. Do not assume an open-source license grant until one is explicitly added.
+This repository is licensed under the [Apache License 2.0](./LICENSE). This license does not change the terms governing any reference repository or its contents.

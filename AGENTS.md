@@ -85,7 +85,6 @@
 - commit / PR 标题使用仓库约定的 Conventional Commits 风格。
 - 推送前运行本文件“命令”节中仓库实际定义的完成检查。
 - 主分支采用 squash merge。
-- 最终合并仅由仓库所有者 `MC0571` 执行。
 
 ## 先读这些
 
