@@ -28,6 +28,7 @@
 - 调查、Evidence、Coverage、Canonical Spec、Validation 和 Conformance 是不同职责，不要混成不可验证的单一步骤。
 - Canonical Spec 只描述必须成立的行为与约束；实现计划、任务分解和内部设计不属于 Canonical Spec。
 - 不要把原仓库目录、内部符号、私有数据结构或偶然模块边界直接提升为规范要求。
+- 新增或修改插件、技能时，按 `CONTRIBUTING.md` 的“插件与技能格式”及其中链接的标准核对结构、元数据和实际验证结果。
 - 重要规格结论必须尽可能绑定可复核证据。
 - 无法确定的行为必须显式保留为 unknown、ambiguous 或 conflicting evidence；禁止自行补全。
 - 核心行为不得依赖未声明的外部环境才能成立。

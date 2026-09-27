@@ -106,6 +106,14 @@ Canonical Spec 应描述必须成立的行为和约束，而不是复制参考�
 
 除非本身属于兼容契约，否则不要把原仓库的目录、内部符号、私有数据结构、偶然模块边界或可替换算法写成规范要求。
 
+### 插件与技能格式
+
+提供可安装插件时，遵循 [Agent Plugins 规范](https://agent-plugins.org/specification)：在插件根目录提供 `plugin.json`，设置必需的 `$schema` 和 `name`；技能放在 `skills/<skill-name>/SKILL.md`，MCP 服务配置放在根目录的 `mcp.json`（仅在提供服务时需要）。客户端专有内容使用规范定义的扩展机制，不替代可移植格式。
+
+每个技能遵循 [Agent Skills 规范](https://agentskills.io/specification)：`SKILL.md` 包含 YAML frontmatter 和正文，至少声明与目录名一致的 `name`，以及说明能力和适用场景的 `description`。
+
+新增或修改插件、技能时，按所声明版本的规范验证实际包结构和元数据；如声称支持某个客户端，还需验证该客户端能加载。尚未提供的组件无需创建占位文件。
+
 ## 6. 测试要求
 
 任何可执行代码进入仓库后，改动应根据影响范围运行仓库实际定义的验证，例如：
