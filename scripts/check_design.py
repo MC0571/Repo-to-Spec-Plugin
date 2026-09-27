@@ -184,6 +184,10 @@ def validate_registry(data: dict, root: Path, known_contracts: set) -> dict:
         kinds = evidence_kinds(milestone, root, mid)
         if milestone["status"] == "completed":
             require("approval" in kinds, f"{mid}: 完成缺少批准记录")
+            if mid == "M0":
+                require(data["status"] in {"accepted", "superseded"} and "approval" in root_evidence,
+                        "M0: 设计基线缺少采纳记录")
+                require("verification" in kinds, "M0: 缺少 CLI/UI 设计走查记录")
             require(all(milestones[d]["status"] == "completed" for d in milestone["depends_on"]), f"{mid}: 前置里程碑未完成")
             require(all(checks[a]["status"] == "passed" for a in actual_checks), f"{mid}: 出口验收尚未通过")
             for cid in actual_caps:
@@ -324,6 +328,22 @@ class RegistryTests(unittest.TestCase):
 
     def test_premature_milestone(self):
         self.data["milestones"][0]["status"] = "completed"; self.reject()
+
+    def test_m0_requires_adoption_and_walkthrough(self):
+        self.data["milestones"].append({"id": "M0", "name": "设计基线", "depends_on": [],
+                                        "capability_ids": [], "exit_check_ids": [], "status": "completed",
+                                        "evidence": [{"kind": "approval", "path": "proof.md"}]})
+        self.data["milestones"][0]["depends_on"] = ["M0"]
+        with self.assertRaisesRegex(DesignError, "设计基线缺少采纳记录"):
+            self.validate()
+        self.data["status"] = "accepted"
+        self.data["evidence"] = [{"kind": "approval", "path": "proof.md"}]
+        with self.assertRaisesRegex(DesignError, "设计走查记录"):
+            self.validate()
+        self.data["milestones"][1]["evidence"].append({"kind": "verification", "path": "proof.md"})
+        self.validate()
+        self.data["status"] = "superseded"
+        self.validate()
 
     def test_executed_check_without_evidence(self):
         self.data["acceptance_checks"][0]["status"] = "failed"; self.reject()
