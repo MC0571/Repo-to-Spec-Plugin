@@ -8,7 +8,7 @@
 
 Repo-to-Spec is for reverse specification of existing code repositories, especially where license terms and information boundaries require careful handling.
 
-It focuses not on how the code is written, but on recovering from source code, tests, configuration, interface definitions, and observable behavior:
+It investigates source code, tests, configuration, interface definitions, and observable behavior to recover:
 
 - what capabilities the system exposes;
 - how inputs, outputs, and errors are defined;
@@ -50,9 +50,9 @@ Prefer externally observable contracts, including:
 
 ### Implementation-independent
 
-The Canonical Spec defines what must be true, not how it must be implemented.
+The Canonical Spec defines what must be true, not how it must be implemented. Source structure and internal architecture are investigation evidence that can reveal behavior, interfaces, and constraints.
 
-Unless an implementation detail is itself part of a compatibility contract, the Spec should not require:
+If an architectural feature is itself an observable behavior, compatibility requirement, or security boundary, the Spec should include it when supported by evidence. Otherwise, the Spec should not require these implementation choices:
 
 - the original repository layout;
 - internal class or function names;
@@ -115,13 +115,15 @@ Where:
 
 ## Boundaries
 
-Repo-to-Spec is not intended to:
+Repo-to-Spec analyzes source code and architecture to recover behavior, interfaces, and boundaries that must be preserved, but is not intended to:
 
-- reproduce the reference repository's internal architecture;
-- restate the code structure as documentation;
+- require a new implementation to reproduce the reference repository's internal architecture;
+- turn source directories, modules, classes, or call relationships directly into specification requirements;
 - prescribe directories, modules, or algorithms for an independent implementation;
 - fill specification gaps with unverified assumptions;
 - treat implementation plans or task breakdowns as part of the Canonical Spec.
+
+For example, investigating a configuration module should recover confirmed configuration sources, precedence, and error behavior, rather than merely list the module's responsibilities.
 
 This project does not determine whether a particular repository's license permits a given use, or guarantee that a specification or implementation is automatically authorized for use.
 
