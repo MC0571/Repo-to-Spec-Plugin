@@ -2,11 +2,11 @@
 
 [中文](./README.md)
 
-> Recover a verifiable, traceable, implementation-independent Canonical Spec from an existing code repository so an independent implementation can rebuild the system without relying on the original implementation details and can later be validated against the Spec.
+> Derive a verifiable, traceable, implementation-independent Canonical Spec from an existing code repository. Investigators retain source evidence and deliver a specification without the reference repository's identity, source code, or investigation records. Implementers can then rebuild the needed capabilities or adopt selected capabilities in another system without knowing the reference repository exists, and validate the chosen scope against the Spec.
 
 ## Purpose
 
-Repo-to-Spec is for reverse specification of existing code repositories.
+Repo-to-Spec is for reverse specification of existing code repositories, especially where license terms and information boundaries require careful handling.
 
 It focuses not on how the code is written, but on recovering from source code, tests, configuration, interface definitions, and observable behavior:
 
@@ -17,7 +17,7 @@ It focuses not on how the code is written, but on recovering from source code, t
 - how ordering, precedence, fallback, compatibility, and security boundaries constrain behavior;
 - which behaviors are confirmed by evidence and which remain ambiguous or uncovered.
 
-The resulting specification should support an independent implementation without requiring the original repository's internal structure to be reproduced.
+Investigators retain evidence for review; the Canonical Spec delivered to implementers contains only the behavior and constraints needed for implementation. Implementers may rebuild the whole system or select only the capabilities they need. If required compatibility information would reveal the source, that limitation should be stated explicitly.
 
 ## Core principles
 
@@ -61,6 +61,8 @@ Unless an implementation detail is itself part of a compatibility contract, the 
 - replaceable algorithmic details;
 - unnecessary technology choices.
 
+The delivered specification should not contain the reference repository's identity, source code excerpts, or evidence records used only for investigation.
+
 ### Coverage and closure
 
 Specification completeness is not measured by document length.
@@ -88,11 +90,15 @@ Reference Repository
         ↓
 Repository Investigation
         ↓
-Evidence + Coverage
+Evidence + Coverage (investigation side)
         ↓
 Canonical Spec
         ↓
 Spec Validation
+        ↓
+Delivery to Implementers
+        ↓
+Rebuild or Selective Adoption
         ↓
 Conformance Evidence
 ```
@@ -100,10 +106,12 @@ Conformance Evidence
 Where:
 
 - **Repository Investigation** locates and verifies behavior-relevant source, tests, configuration, and runtime evidence;
-- **Evidence + Coverage** records evidence sources, confidence, coverage, and unresolved items;
+- **Evidence + Coverage** records evidence sources, confidence, coverage, and unresolved items on the investigation side;
 - **Canonical Spec** captures implementation-independent behavior, interfaces, constraints, and boundaries;
 - **Spec Validation** checks completeness, clarity, consistency, verifiability, and implementation independence;
-- **Conformance Evidence** provides reviewable evidence for validating a later implementation.
+- **Delivery to Implementers** provides only the validated specification, without the reference repository or investigation records;
+- **Rebuild or Selective Adoption** implements the full specification or a chosen set of capabilities independently;
+- **Conformance Evidence** provides reviewable evidence for validating the chosen scope of a later implementation.
 
 ## Boundaries
 
@@ -114,6 +122,8 @@ Repo-to-Spec is not intended to:
 - prescribe directories, modules, or algorithms for an independent implementation;
 - fill specification gaps with unverified assumptions;
 - treat implementation plans or task breakdowns as part of the Canonical Spec.
+
+This project does not determine whether a particular repository's license permits a given use, or guarantee that a specification or implementation is automatically authorized for use.
 
 ## Contributing
 
