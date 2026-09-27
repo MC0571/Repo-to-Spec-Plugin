@@ -2,138 +2,108 @@
 
 [中文](./README.md)
 
-> Derive a verifiable, traceable, implementation-independent Canonical Spec from an existing code repository. Investigators retain source evidence and deliver a specification without the reference repository's identity, source code, or investigation records. Implementers can then rebuild the needed capabilities or adopt selected capabilities in another system without knowing the reference repository exists, and validate the chosen scope against the Spec.
+> Transform a mature software repository into a highly faithful, as-complete-as-possible system specification package without binding a new implementation to the original codebase, so an independent team or coding agent can rebuild the whole product or selectively adopt capabilities, workflows, modules, and subsystems.
 
-## Purpose
+## Why this project exists
 
-Repo-to-Spec is for reverse specification of existing code repositories, especially where license terms and information boundaries require careful handling.
+Mature software repositories contain more than code. They encode product decisions, interaction rules, system boundaries, failure handling, compatibility behavior, and engineering trade-offs that have already been tested through real development and use. Rebuilding similar software without learning from that work often means rebuilding the same wheels and rediscovering the same failures.
 
-It investigates source code, tests, configuration, interface definitions, and observable behavior to recover:
+At the same time, "open source" does not mean every repository is an appropriate implementation base for a new project. Licenses, additional terms, and usage policies can impose different constraints. Repo-to-Spec draws on clean-room design principles to separate reusable product and engineering knowledge from the reference implementation: understand what the mature project has already solved, then restate those results as specifications that can be implemented independently.
 
-- what capabilities the system exposes;
-- how inputs, outputs, and errors are defined;
-- how configuration, state, and lifecycle behavior work;
-- what filesystem, persistence, and network side effects exist;
-- how ordering, precedence, fallback, compatibility, and security boundaries constrain behavior;
-- which behaviors are confirmed by evidence and which remain ambiguous or uncovered.
+The full project motivation, target state, and design principles are documented in [VISION.md](./VISION.md).
 
-Investigators retain evidence for review; the Canonical Spec delivered to implementers contains only the behavior and constraints needed for implementation. Implementers may rebuild the whole system or select only the capabilities they need. If required compatibility information would reveal the source, that limitation should be stated explicitly.
+## What it enables
+
+Repo-to-Spec is for teams and coding agents that want to learn from mature software without directly inheriting its implementation.
+
+- **Rebuild a complete product independently**: recover the target product's functionality, experience, external contracts, and essential system design into development-ready specifications.
+- **Adopt selected capabilities**: extract a capability, workflow, module, or subsystem as design input for an existing product, then make further product and technical choices in that new context.
+- **Give coding agents self-contained development input**: implementers do not need to know that the reference repository exists, and do not need to repeat repository research, requirement recovery, or key design work while coding.
+
+Repo-to-Spec delivers **complete specifications that can be implemented independently, recomposed, and evolved**—not code intended for copying.
+
+## Deliverable
+
+The final deliverable is a self-contained `SYSTEM_SPEC/` package, not a repository walkthrough or a Wiki organized around the source tree.
+
+Depending on the target product, the package may combine assets such as:
+
+| Design content | Typical representation |
+| --- | --- |
+| Product goals, capabilities, business rules, and end-to-end flows | Human-readable specifications |
+| Screens, interactions, visual states, and accessibility requirements | Experience specifications, design tokens, and necessary visual assets |
+| Domain, state, responsibilities, concurrency, recovery, and security design | Structured models and technical specifications |
+| APIs, events, configuration, and file formats | Interface definitions, protocol contracts, and schemas |
+| Edge cases and acceptance behavior | Scenarios, fixtures, test vectors, and applicable conformance assets |
+| What implementations may and may not vary | Implementation-freedom and constraint declarations |
+
+Every project does not need the same directory layout or file formats. Completeness is judged by whether, within the declared scope, an independent implementation team has enough product, experience, and technical design to begin engineering without reopening key decisions.
 
 ## Core principles
 
-### Evidence-grounded
+### Faithful to the target product
 
-Material requirements in the Canonical Spec should be traceable to reviewable evidence whenever possible.
+The specification should recover the target product's functionality, experience, interfaces, state semantics, and necessary system constraints as accurately as possible. Happy paths, failures, edge states, and feature interactions are all part of the product; a summary of major features is not enough.
 
-Investigation should distinguish:
+### Complete design, independent implementation
 
-- confirmed behavior;
-- inference supported by consistent evidence;
-- unverified assumptions;
-- uncovered areas;
-- conflicting evidence.
+Critical product and system design must be explicit, but the specification should not unnecessarily freeze the original repository layout, internal symbols, framework, private data structures, or incidental module boundaries. Different teams may choose different implementations as long as they satisfy the same normative product results and constraints.
 
-Unknown behavior should remain explicitly unknown rather than being filled in by the investigator.
+### The final package is self-contained
 
-### Observable behavior first
+Implementers receive only the system specification package. They should not need access to the reference repository or be told to inspect source code to resolve unspecified behavior. Investigation can contain unresolved questions, but implementation-blocking questions cannot be presented as a final deliverable.
 
-Prefer externally observable contracts, including:
+### Tools serve the deliverable
 
-- CLI, API, and protocol surfaces;
-- configuration and environment variables;
-- input, output, error, and exit behavior;
-- state transitions and lifecycle behavior;
-- filesystem, persistence, and network side effects;
-- ordering, precedence, and fallback rules;
-- compatibility and security boundaries;
-- observable constraints such as determinism and idempotency.
+File search, tests, runtime observation, and optional tools such as GitNexus, CodeStory, Serena, or OpenDesign are implementation aids. They do not define the product, and users should not need to assemble a particular external toolchain before Repo-to-Spec can provide value.
 
-### Implementation-independent
+### Efficiency means eliminating repeated upstream work
 
-The Canonical Spec defines what must be true, not how it must be implemented. Source structure and internal architecture are investigation evidence that can reveal behavior, interfaces, and constraints.
-
-If an architectural feature is itself an observable behavior, compatibility requirement, or security boundary, the Spec should include it when supported by evidence. Otherwise, the Spec should not require these implementation choices:
-
-- the original repository layout;
-- internal class or function names;
-- private data structures;
-- incidental module boundaries;
-- replaceable algorithmic details;
-- unnecessary technology choices.
-
-The delivered specification should not contain the reference repository's identity, source code excerpts, or evidence records used only for investigation.
-
-### Coverage and closure
-
-Specification completeness is not measured by document length.
-
-Investigation should continuously identify:
-
-- behavior surfaces already covered;
-- areas not yet investigated;
-- unresolved ambiguities;
-- conflicting evidence;
-- information still missing for independent implementation.
-
-A Spec is reliable only when the important behavior and constraints are sufficiently closed.
-
-### Spec is normative
-
-The Canonical Spec is the normative source for behavior and constraints.
-
-Independent implementations may use different internal designs as long as their observable behavior conforms to the same Spec.
+The goal is not to maximize investigation records. It is to prevent the next team from repeating repository study, requirement recovery, experience design, and key system design. Internal traceability and validation are useful only insofar as they improve the deliverable or reduce downstream rework.
 
 ## Working model
 
 ```text
-Reference Repository
-        ↓
-Repository Investigation
-        ↓
-Evidence + Coverage (investigation side)
-        ↓
-Canonical Spec
-        ↓
-Spec Validation
-        ↓
-Delivery to Implementers
-        ↓
-Rebuild or Selective Adoption
-        ↓
-Conformance Evidence
+Mature repository and available product context
+                    ↓
+               Repo-to-Spec
+                    ↓
+       Complete system specification package
+                    ↓
+ Independent team or coding agent with no repository access
+                    ↓
+ Different internal implementations, same normative product result
 ```
 
-Where:
-
-- **Repository Investigation** locates and verifies behavior-relevant source, tests, configuration, and runtime evidence;
-- **Evidence + Coverage** records evidence sources, confidence, coverage, and unresolved items on the investigation side;
-- **Canonical Spec** captures implementation-independent behavior, interfaces, constraints, and boundaries;
-- **Spec Validation** checks completeness, clarity, consistency, verifiability, and implementation independence;
-- **Delivery to Implementers** provides only the validated specification, without the reference repository or investigation records;
-- **Rebuild or Selective Adoption** implements the full specification or a chosen set of capabilities independently;
-- **Conformance Evidence** provides reviewable evidence for validating the chosen scope of a later implementation.
+The plugin works backward from the final handoff: understand the target product, close design gaps that would block implementation, and package the result into specification assets that humans and engineering tools can consume. Investigation strategy, orchestration, and tool selection remain implementation details of Repo-to-Spec rather than dependencies of the receiving team.
 
 ## Boundaries
 
-Repo-to-Spec analyzes source code and architecture to recover behavior, interfaces, and boundaries that must be preserved, but is not intended to:
+Repo-to-Spec is not:
 
-- require a new implementation to reproduce the reference repository's internal architecture;
-- turn source directories, modules, classes, or call relationships directly into specification requirements;
-- prescribe directories, modules, or algorithms for an independent implementation;
-- fill specification gaps with unverified assumptions;
-- treat implementation plans or task breakdowns as part of the Canonical Spec.
+- a repository Wiki or source-summary generator;
+- a tool that translates directories, classes, functions, and call graphs directly into requirements;
+- a code-replication system that substitutes copied internal architecture for independent design;
+- a research platform whose value is measured by evidence volume, tool integrations, or document length.
 
-For example, investigating a configuration module should recover confirmed configuration sources, precedence, and error behavior, rather than merely list the module's responsibilities.
+This project does not determine whether a particular repository's license, additional terms, or policies permit a specific use. It does not provide legal advice or guarantee that generated specifications or later implementations are automatically authorized. Users remain responsible for applicable licensing, contractual, and compliance requirements.
 
-This project does not determine whether a particular repository's license permits a given use, or guarantee that a specification or implementation is automatically authorized for use.
+## Project documentation
+
+- [VISION.md](./VISION.md): project motivation, target state, product commitments, and long-term design principles.
+- [CONTRIBUTING.md](./CONTRIBUTING.md): contribution workflow, quality requirements, and plugin/skill format conventions.
+- [AGENTS.md](./AGENTS.md): hard constraints for coding agents working in this repository.
+
+The README is limited to public positioning and delivery boundaries. Architecture, data models, and implementation plans belong in dedicated design documents rather than being duplicated here.
+
+## Status
+
+The project is currently designing the plugin, skills, and runtime capabilities backward from the target handoff. This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state and should not be read as a claim that every capability is already implemented.
 
 ## Contributing
 
-Before contributing, read:
-
-- [CONTRIBUTING.md](./CONTRIBUTING.md) for repository-wide development and quality requirements;
-- [AGENTS.md](./AGENTS.md) for Coding Agent execution constraints in this repository.
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) before contributing. Coding agents modifying this repository must also follow [AGENTS.md](./AGENTS.md).
 
 ## License
 
-This repository is licensed under the [Apache License 2.0](./LICENSE). This license does not change the terms governing any reference repository or its contents.
+This repository is licensed under the [Apache License 2.0](./LICENSE). That license does not modify the terms governing any reference repository or its contents.
