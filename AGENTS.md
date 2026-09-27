@@ -16,6 +16,8 @@
 
 当前仓库没有安装、开发、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 的单一 CI 检查使用 Python 3 标准库运行 `python3 scripts/ci_check.py`，无需安装依赖；CI 检查逻辑的本地自检命令为 `python3 scripts/ci_check.py --self-test`。
 
+设计文档与登记表检查为 `python3 scripts/check_design.py`，自检为 `python3 scripts/check_design.py --self-test`，同样只依赖 Python 标准库。这些检查不代表产品运行时或产品级完备性验证。
+
 因此：
 
 - 不要臆造 `npm`、`pnpm`、`bun`、`pip`、`uv`、`cargo` 等命令；
@@ -95,5 +97,8 @@
 - 长期目标与产品原则：`VISION.md`
 - 开发流程、测试与 PR 要求：`CONTRIBUTING.md`
 - 英文项目说明：`README_EN.md`
+- 目标架构与建设顺序：`ARCHITECTURE.md`、`ROADMAP.md`
+- 按任务选择详细设计、契约与决策：`docs/README.md`
+- 涉及目标能力、阶段或验收变更：`docs/planning/design-baseline.json` 与 `docs/planning/VALIDATION-STRATEGY.md`
 
 新增长期有效的架构、数据模型、接口或安全文档后，只在这里增加索引，不复制全文。
