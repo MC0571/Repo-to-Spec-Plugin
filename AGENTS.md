@@ -14,7 +14,7 @@
 
 ## 命令
 
-当前仓库尚未定义安装、开发、测试、lint、typecheck 或 build 命令。
+当前仓库没有安装、开发、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 的单一 CI 检查使用 Python 3 标准库运行 `python3 scripts/ci_check.py`，无需安装依赖；CI 检查逻辑的本地自检命令为 `python3 scripts/ci_check.py --self-test`。
 
 因此：
 
