@@ -93,6 +93,7 @@ Repo-to-Spec 不是：
 - [VISION.md](./VISION.md)：项目动机、目标状态、产品承诺与长期设计原则。
 - [ARCHITECTURE.md](./ARCHITECTURE.md)：完整目标架构与系统边界。
 - [ROADMAP.md](./ROADMAP.md)：按能力依赖组织的建设与验证路径。
+- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues)：当前可执行工作及进展。
 - [设计文档入口](./docs/README.md)：领域模型、执行协议、套件格式提案、质量与决策记录。
 - [CONTRIBUTING.md](./CONTRIBUTING.md)：贡献流程、质量要求和插件/技能格式约定。
 - [AGENTS.md](./AGENTS.md)：编程智能体在本仓库中工作的硬约束。

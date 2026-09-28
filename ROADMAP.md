@@ -67,6 +67,6 @@ M1/M2 的有限样例是架构验证切面，不是产品愿景的缩减。一�
 
 ## 6. 执行入口
 
-[WORK-PACKAGES.md](docs/planning/WORK-PACKAGES.md) 已将路线拆为可创建 Issue 的工作包，并写明依赖、产出和检查。它们是本地规划文件，不代表 GitHub 上已经创建任务或分配人员。
+可执行工作和依赖在 [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues) 管理，WP02—WP12 按 M1—M6 [GitHub Milestones](https://github.com/MC0571/Repo-to-Spec-Plugin/milestones) 组织；M0 的采纳依据见[维护者记录](docs/reviews/M0-ADOPTION.md)。Issue 记录任务进展、负责人和排期；关闭 Issue 或 GitHub Milestone 不自动提升 [设计登记表](docs/planning/design-baseline.json)中的能力与阶段成熟度。
 
 实现团队每次工作应回答：服务哪个 Cxx 能力、在哪个阶段闭合、遵守哪个契约、以哪个 Axx 验收证明。很小的文字修正不必建立额外机制；产品行为、兼容合同和重大设计改变必须有对应依据。

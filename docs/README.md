@@ -31,7 +31,7 @@
 | 怎样评测与避免退化 | [VALIDATION-STRATEGY.md](planning/VALIDATION-STRATEGY.md) |
 | 哪些决策尚需证据、谁来决定 | [OPEN-DECISIONS.md](decisions/OPEN-DECISIONS.md) |
 | 为什么选择这条路线 | [ADR 索引](decisions/README.md) |
-| 怎样拆成可执行工作 | [WORK-PACKAGES.md](planning/WORK-PACKAGES.md) |
+| 怎样拆成可执行工作 | [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues) 与 [Milestones](https://github.com/MC0571/Repo-to-Spec-Plugin/milestones) |
 
 ## 权威与状态
 
@@ -43,7 +43,7 @@
 
 ## 单一事实来源
 
-领域概念的定义只在领域模型维护；可执行约束只在契约维护；能力、里程碑状态及其关联只在 `design-baseline.json` 维护。架构和路线图引用这些内容，不复制第二份状态表。
+领域概念的定义只在领域模型维护；可执行约束只在契约维护；能力、目标阶段及验收的关联和证据成熟度只在 `design-baseline.json` 维护。GitHub 管理工作项及其执行进展，关闭 Issue 或 Milestone 不自动提升登记表状态。架构和路线图引用这些内容，不复制第二份状态表。
 
 `SYSTEM_SPEC/` 是 Repo-to-Spec 将来生成的**目标产品交付物**，不是本仓库设计文档的根目录。`docs/` 描述 Repo-to-Spec 自己；两种规格不可混淆。内部来源追踪也不属于下游实施包。
 
