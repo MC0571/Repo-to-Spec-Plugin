@@ -103,7 +103,7 @@ README 只说明公开定位和交付边界；具体架构、数据模型和实�
 
 项目正在从目标状态反推插件、技能和运行能力的设计。仓库已有基础 CI 和设计登记表检查；尚未提供可安装插件、正式生成命令或经过产品级验证的系统规格生成能力。
 
-README 描述稳定的产品定位；[VISION.md](./VISION.md) 描述目标状态；新增架构与路线文件为待评审的设计基线，不代表能力已经实现或全部设计已获采纳。源快照见 [当前状态](./docs/CURRENT-STATE.md)，目标能力进展见 [能力地图](./docs/planning/CAPABILITY-MAP.md)。
+README 描述稳定的产品定位；[VISION.md](./VISION.md) 描述目标状态；[M0 设计基线](./docs/reviews/M0-ADOPTION.md)已在限定范围内采纳，不代表产品能力实现或全部详细设计获批。源快照见 [当前状态](./docs/CURRENT-STATE.md)，目标能力进展见 [能力地图](./docs/planning/CAPABILITY-MAP.md)。
 
 ## 贡献
 

@@ -103,7 +103,7 @@ The README is limited to public positioning and delivery boundaries. Architectur
 
 The project is currently designing the plugin, skills, and runtime capabilities backward from the target handoff. The repository contains basic CI and design-registry checks; it does not yet provide an installable plugin, a released generation command, or product-validated specification generation.
 
-This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state. The architecture and roadmap form a proposed design baseline, not a claim that the capabilities are implemented or that every design choice is accepted. See the [source snapshot](./docs/CURRENT-STATE.md) and the [capability map](./docs/planning/CAPABILITY-MAP.md).
+This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state. The [M0 design baseline](./docs/reviews/M0-ADOPTION.md) has been adopted within its recorded scope; this does not mean product capabilities are implemented or every detailed design is accepted. See the [source snapshot](./docs/CURRENT-STATE.md) and the [capability map](./docs/planning/CAPABILITY-MAP.md).
 
 ## Contributing
 

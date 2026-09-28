@@ -1,7 +1,13 @@
 {
   "registry_version": 1,
   "baseline_id": "DB-20260928",
-  "status": "proposed",
+  "status": "accepted",
+  "evidence": [
+    {
+      "kind": "approval",
+      "path": "docs/reviews/M0-ADOPTION.md"
+    }
+  ],
   "source": {
     "repository": "https://github.com/MC0571/Repo-to-Spec-Plugin",
     "commit": "adb63ae16dd79e3c3d4907fe33570ebe00a3389b",
@@ -609,8 +615,17 @@
       "depends_on": [],
       "capability_ids": [],
       "exit_check_ids": [],
-      "status": "planned",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        {
+          "kind": "approval",
+          "path": "docs/reviews/M0-ADOPTION.md"
+        },
+        {
+          "kind": "verification",
+          "path": "docs/reviews/M0-ADOPTION.md"
+        }
+      ]
     },
     {
       "id": "M1",

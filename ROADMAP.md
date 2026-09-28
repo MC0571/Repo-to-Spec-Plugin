@@ -1,6 +1,6 @@
 # 完整愿景的建设与验证路径
 
-> 基线：DB-20260928 · 状态：待评审提案 · 类型：建设路径
+> 基线：DB-20260928 · 状态：已采纳 · 类型：建设路径
 > 本文承接现有愿景，不表示能力已经实现；变更与采纳规则见文档入口。
 
 
@@ -8,7 +8,7 @@
 
 本路线图按目标能力的依赖建立可验证阶段，不以删减产品承诺定义版本。阶段结果可以尚未覆盖全部目标场景，但必须准确标注范围与成熟度，不能作为“完整愿景已经实现”的替代。
 
-当前事实见 [CURRENT-STATE.md](docs/CURRENT-STATE.md)。本包给出了设计提案与文档一致性检查，**没有**因此把任何产品里程碑标为完成。能力状态、依赖和验收关联的单一事实来源是 [design-baseline.json](docs/planning/design-baseline.json)。
+当前事实见 [CURRENT-STATE.md](docs/CURRENT-STATE.md)。M0 的采纳与 CLI/UI 设计走查见[维护者记录](docs/reviews/M0-ADOPTION.md)；M1—M6 的产品能力均未完成。能力状态、依赖和验收关联的单一事实来源是 [design-baseline.json](docs/planning/design-baseline.json)。
 
 ## 2. 依赖图与并行工作
 

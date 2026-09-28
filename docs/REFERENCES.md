@@ -28,4 +28,4 @@
 
 ## 事实与提案的区分
 
-CURRENT-STATE 与此处固定链接记录来源事实；ARCHITECTURE、ROADMAP、contracts 与 ADR 的具体机制是本次依据现有愿景提出的设计提案。新的对象划分、工作包、验收编号和存储建议不是现有源码已经实现的事实。正式采纳需要仓库维护者评审。
+CURRENT-STATE 与此处固定链接记录来源事实；ARCHITECTURE、ROADMAP、contracts 与 ADR 的机制原作为设计提案提出，采纳范围见 [M0 维护者记录](reviews/M0-ADOPTION.md)。新的对象划分、工作包、验收编号和存储建议不是现有源码已经实现的事实；未采纳的工程选择仍须按开放决策验证。
