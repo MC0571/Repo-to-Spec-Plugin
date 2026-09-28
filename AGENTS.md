@@ -16,6 +16,8 @@
 
 当前仓库没有安装、开发、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 的单一 CI 检查使用 Python 3 标准库运行 `python3 scripts/ci_check.py`，无需安装依赖；CI 检查逻辑的本地自检命令为 `python3 scripts/ci_check.py --self-test`。
 
+设计文档与登记表检查为 `python3 scripts/check_design.py`，自检为 `python3 scripts/check_design.py --self-test`，同样只依赖 Python 标准库。这些检查不代表产品运行时或产品级完备性验证。
+
 因此：
 
 - 不要臆造 `npm`、`pnpm`、`bun`、`pip`、`uv`、`cargo` 等命令；
@@ -79,7 +81,6 @@
 - 不手工绕过已经存在的生成流程；应修改源文件并运行对应生成命令。
 - 不进行与当前任务无关的 rebase、reset、强制推送或历史重写。
 - 不绕过分支保护、必需检查或评审门槛。
-- 未经用户明确要求，不自动合并 PR。
 
 ## Git / PR
 
@@ -87,6 +88,7 @@
 - 分支命名遵守 `CONTRIBUTING.md`。
 - 提交 / PR 标题使用仓库约定的 Conventional Commits 风格。
 - 推送前运行本文件“命令”节中仓库实际定义的完成检查。
+- PR 经未参与实现的独立 reviewer agent 审查相对目标分支的完整改动并通过，主 Agent 在当前 exact head 留下审核评论；确认无未解决阻断问题、必需检查通过且均适用于当前 head 后，可以自动合并。审查后有修改时补审新增改动及其对完整 PR 的影响，并重新核对检查。
 - 主分支采用 Squash Merge。
 
 ## 先读这些
@@ -95,5 +97,8 @@
 - 长期目标与产品原则：`VISION.md`
 - 开发流程、测试与 PR 要求：`CONTRIBUTING.md`
 - 英文项目说明：`README_EN.md`
+- 目标架构与建设顺序：`ARCHITECTURE.md`、`ROADMAP.md`
+- 按任务选择详细设计、契约与决策：`docs/README.md`
+- 涉及目标能力、阶段或验收变更：`docs/planning/design-baseline.json` 与 `docs/planning/VALIDATION-STRATEGY.md`
 
 新增长期有效的架构、数据模型、接口或安全文档后，只在这里增加索引，不复制全文。

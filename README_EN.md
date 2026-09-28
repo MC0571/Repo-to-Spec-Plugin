@@ -91,6 +91,9 @@ This project does not determine whether a particular repository's license, addit
 ## Project documentation
 
 - [VISION.md](./VISION.md): project motivation, target state, product commitments, and long-term design principles.
+- [ARCHITECTURE.md](./ARCHITECTURE.md): the complete target architecture and system boundaries.
+- [ROADMAP.md](./ROADMAP.md): capability-dependent implementation and validation milestones.
+- [Design documentation](./docs/README.md): domain model, execution protocol, package proposal, quality model, and decisions.
 - [CONTRIBUTING.md](./CONTRIBUTING.md): contribution workflow, quality requirements, and plugin/skill format conventions.
 - [AGENTS.md](./AGENTS.md): hard constraints for coding agents working in this repository.
 
@@ -98,7 +101,9 @@ The README is limited to public positioning and delivery boundaries. Architectur
 
 ## Status
 
-The project is currently designing the plugin, skills, and runtime capabilities backward from the target handoff. This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state and should not be read as a claim that every capability is already implemented.
+The project is currently designing the plugin, skills, and runtime capabilities backward from the target handoff. The repository contains basic CI and design-registry checks; it does not yet provide an installable plugin, a released generation command, or product-validated specification generation.
+
+This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state. The [M0 design baseline](./docs/reviews/M0-ADOPTION.md) has been adopted within its recorded scope; this does not mean product capabilities are implemented or every detailed design is accepted. See the [source snapshot](./docs/CURRENT-STATE.md) and the [capability map](./docs/planning/CAPABILITY-MAP.md).
 
 ## Contributing
 

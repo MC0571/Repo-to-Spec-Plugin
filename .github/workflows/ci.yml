@@ -24,3 +24,7 @@ jobs:
           CI_DIFF_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           CI_PR_TITLE: ${{ github.event.pull_request.title }}
         run: python3 scripts/ci_check.py
+      - name: Check design baseline
+        run: |
+          python3 scripts/check_design.py
+          python3 scripts/check_design.py --self-test
