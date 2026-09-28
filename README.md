@@ -101,7 +101,7 @@ README 只说明公开定位和交付边界；具体架构、数据模型和实�
 
 ## 当前状态
 
-仓库现有可安装插件包，提供一个统一 Skill 入口及按需读取的调查方法、工具指南、规格标准、模板和检查清单。Skill 由宿主 Agent 执行，不要求独立运行时。
+仓库现有可安装插件包，提供一个统一 Skill 入口及按问题读取的能力边界、行为恢复、体验视觉、数据接口、实现解耦、选择性吸收与规格审查方法，并配有工具指南、输出标准和模板。Skill 由宿主 Agent 执行，不要求独立运行时。
 
 包结构和元数据检查不等同于宿主真实加载、样例规格质量或独立消费验证；这些结果及未覆盖范围见 [当前状态与验证记录](./docs/README.md)。旧的 S1–S6、Cxx、M0–M6 和 Axx 基线及其路线图保留为历史档案，不再是实现清单。
 
@@ -118,7 +118,7 @@ codex plugin add repo-to-spec@repo-to-spec-local
 
 开始时提供仓库位置、目标范围、目标使用环境和必要产品上下文，例如：“用 Repo-to-Spec 分析 `/path/to/reference-repo` 的导入能力，面向本地桌面产品，保留原有用户交互；请覆盖必要依赖并交付可脱离来源仓库实施的 `SYSTEM_SPEC/`。”
 
-样例为对本地 Agent Skill 包做只读静态预检查的选择性吸收。[包内样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)及[首次运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)保留独立消费检查；[安装后新会话规格](./docs/examples/installed-cli-run/SYSTEM_SPEC/)及[验证记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)覆盖真实加载和缺材料场景。两次样例都只覆盖无图形界面的单项能力。
+静态预检查的[包内样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)及[首次运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)保留独立消费检查；[安装后新会话规格](./docs/examples/installed-cli-run/SYSTEM_SPEC/)及[验证记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)覆盖真实加载和缺材料场景。深化方法另以真实仓库的“触发评测”能力做了[试跑](./docs/examples/METHOD-DEPTH-VALIDATION-RUN.md)，保留原始草案、评审修订和未闭合依赖。这些验证只覆盖无图形界面的局部能力；新增方法尚未重新完成安装后新会话运行。
 
 ## 贡献
 

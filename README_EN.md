@@ -101,7 +101,7 @@ The README is limited to public positioning and delivery boundaries. Architectur
 
 ## Status
 
-The repository contains an installable plugin package with one unified Skill entry and on-demand investigation methods, tool guidance, specification standards, templates, and review checks. The host Agent performs the work; no separate runtime is required.
+The repository contains an installable plugin package with one unified Skill entry and on-demand methods for capability boundaries, recovery, UI and visual behavior, data and interfaces, implementation independence, selective adoption, and specification review. Tool guidance, specification standards, and a template are included. The host Agent performs the work; no separate runtime is required.
 
 Package structure and metadata checks do not establish real host loading, sample specification quality, or independent consumption. See [current status and verification records](./docs/README.md) for results and uncovered areas. The former S1–S6, Cxx, M0–M6, and Axx baseline and roadmap remain historical records, not an implementation checklist.
 
@@ -118,7 +118,7 @@ Start a new session and invoke `$repo-to-spec`. Installation, fresh-session load
 
 Provide the repository location, target scope, intended environment, and necessary product context. For example: “Use Repo-to-Spec to analyze the import capability in `/path/to/reference-repo` for a local desktop product. Preserve the existing user interaction, include necessary dependencies, and deliver a `SYSTEM_SPEC/` that can be implemented without the source repository.”
 
-The sample covers selective adoption of a read-only static pre-check for local Agent Skill packages. The [bundled specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [initial run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) preserve its independent-consumer review. The [fresh-session specification](./docs/examples/installed-cli-run/SYSTEM_SPEC/) and [installation run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md) cover host loading and the missing-material case. Both runs cover one capability without a graphical interface.
+The [bundled static pre-check specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [initial run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) preserve an independent-consumer review. The [fresh-session specification](./docs/examples/installed-cli-run/SYSTEM_SPEC/) and [installation run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md) cover host loading and a missing-material case. The deeper methods were also [trialed](./docs/examples/METHOD-DEPTH-VALIDATION-RUN.md) on a separate trigger-evaluation capability, retaining the original draft, reviewed revision, and unresolved dependencies. These checks cover only narrow capabilities without graphical interfaces; the new methods have not been rerun through an installed fresh session.
 
 ## Contributing
 

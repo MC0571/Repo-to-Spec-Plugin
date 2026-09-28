@@ -14,7 +14,7 @@
 
 插件包检查验证完整 manifest Schema、Skill YAML 字段、包内真实路径、仓库本地市场及 Markdown 本地引用。结构格式检查不证明宿主加载或规格语义完整；两者分别进行实际验证。
 
-真实仓库样例及结论见[包内样例规格](../plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)和[首次运行记录](examples/SKILL-PACK-VALIDATION-RUN.md)；Codex CLI 实际安装后的[新会话规格](examples/installed-cli-run/SYSTEM_SPEC/README.md)与[运行记录](examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)另行保存。作者自查与独立接收者检查分别记录。目前仅验证了一个选择性吸收的无图形界面能力；桌面宿主与其他产品类型仍未验证。
+真实仓库的静态预检查样例及结论见[包内样例规格](../plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)和[首次运行记录](examples/SKILL-PACK-VALIDATION-RUN.md)；Codex CLI 实际安装后的[新会话规格](examples/installed-cli-run/SYSTEM_SPEC/README.md)与[运行记录](examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)另行保存。深化方法的另一项“触发评测”[试跑记录](examples/METHOD-DEPTH-VALIDATION-RUN.md)保留原始草案、评审修订与阻塞项。作者核查和来源隔离接收者检查分别记录。现有验证只覆盖无图形界面的局部能力；新增方法未重新安装后运行，桌面宿主、UI 产品与完整产品仍未验证。
 
 ## 历史设计档案
 
