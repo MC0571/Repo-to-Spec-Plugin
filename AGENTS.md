@@ -14,7 +14,16 @@
 
 ## 命令
 
-当前仓库没有安装、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 运行仓库检查 `python3 scripts/ci_check.py`，自检命令为 `python3 scripts/ci_check.py --self-test`。插件包结构检查为 `python3 scripts/check_design.py`，自检为 `python3 scripts/check_design.py --self-test`；两者都只依赖 Python 标准库。
+插件安装命令见 [README.md](README.md#安装与使用)；仓库没有通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 运行标准库仓库检查 `python3 scripts/ci_check.py`，自检命令为 `python3 scripts/ci_check.py --self-test`。插件包结构检查使用独立的开发环境：
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r scripts/check-requirements.txt
+.venv/bin/python scripts/check_design.py
+.venv/bin/python scripts/check_design.py --self-test
+```
+
+这些开发依赖不属于分发插件的运行依赖。
 
 这些检查不代表宿主实际加载成功，也不证明生成规格的产品、体验或逻辑技术设计语义完整。
 

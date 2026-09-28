@@ -107,11 +107,18 @@ README 只说明公开定位和交付边界；具体架构、数据模型和实�
 
 ## 安装与使用
 
-本地插件市场已在 `.agents/plugins/marketplace.json` 注册 `Repo-to-Spec Local`。在 Codex 桌面端重启应用后，打开 Plugins Directory，选择该本地市场并安装 Repo-to-Spec；随后开启新对话并调用 `repo-to-spec` Skill。此本地市场与安装步骤遵循 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)。当前会话尚未验证宿主实际加载。
+本地插件市场已在 `.agents/plugins/marketplace.json` 注册 `Repo-to-Spec Local`。在仓库根目录用 Codex CLI 安装：
+
+```sh
+codex plugin marketplace add .
+codex plugin add repo-to-spec@repo-to-spec-local
+```
+
+随后开启新会话并调用 `$repo-to-spec`。Codex CLI `0.158.0-alpha.2.1` 的安装、新会话加载和样例执行已有[实际记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)。桌面端可按 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)在 Plugins Directory 安装；本仓库尚未实测桌面端加载。
 
 开始时提供仓库位置、目标范围、目标使用环境和必要产品上下文，例如：“用 Repo-to-Spec 分析 `/path/to/reference-repo` 的导入能力，面向本地桌面产品，保留原有用户交互；请覆盖必要依赖并交付可脱离来源仓库实施的 `SYSTEM_SPEC/`。”
 
-已验证样例为对本地 Agent Skill 包做只读静态预检查的选择性吸收。交付件在 [样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)，范围、来源版本、作者自查、独立消费发现与缺材料反例见[样例运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)。独立接收者复查确认其在声明的静态校验范围内可独立实施；这不证明插件宿主加载成功或支持其他产品类型。
+样例为对本地 Agent Skill 包做只读静态预检查的选择性吸收。[包内样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)及[首次运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)保留独立消费检查；[安装后新会话规格](./docs/examples/installed-cli-run/SYSTEM_SPEC/)及[验证记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)覆盖真实加载和缺材料场景。两次样例都只覆盖无图形界面的单项能力。
 
 ## 贡献
 

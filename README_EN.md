@@ -107,11 +107,18 @@ Package structure and metadata checks do not establish real host loading, sample
 
 ## Install and use
 
-The local marketplace in `.agents/plugins/marketplace.json` registers `Repo-to-Spec Local`. In the Codex desktop app, restart the app, open the Plugins Directory, choose this local marketplace, and install Repo-to-Spec. Then start a new chat and invoke the `repo-to-spec` Skill. These local marketplace steps follow the [OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins). Host loading has not been verified in the current session.
+The local marketplace in `.agents/plugins/marketplace.json` registers `Repo-to-Spec Local`. From the repository root, install it with Codex CLI:
+
+```sh
+codex plugin marketplace add .
+codex plugin add repo-to-spec@repo-to-spec-local
+```
+
+Start a new session and invoke `$repo-to-spec`. Installation, fresh-session loading, and a sample run were verified with Codex CLI `0.158.0-alpha.2.1`; see the [run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md). The [OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins) also describes installation through the desktop Plugins Directory. Desktop loading has not been tested here.
 
 Provide the repository location, target scope, intended environment, and necessary product context. For example: “Use Repo-to-Spec to analyze the import capability in `/path/to/reference-repo` for a local desktop product. Preserve the existing user interaction, include necessary dependencies, and deliver a `SYSTEM_SPEC/` that can be implemented without the source repository.”
 
-A verified sample covers selective adoption of a read-only static pre-check for local Agent Skill packages. See the [sample specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [sample run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) for its scope, source revision, author review, independent-consumer findings, and missing-input case. An independent consumer found it implementable within that declared scope; this does not establish host loading or support for other product types.
+The sample covers selective adoption of a read-only static pre-check for local Agent Skill packages. The [bundled specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [initial run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) preserve its independent-consumer review. The [fresh-session specification](./docs/examples/installed-cli-run/SYSTEM_SPEC/) and [installation run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md) cover host loading and the missing-material case. Both runs cover one capability without a graphical interface.
 
 ## Contributing
 

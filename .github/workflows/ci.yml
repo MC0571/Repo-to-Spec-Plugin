@@ -26,5 +26,7 @@ jobs:
         run: python3 scripts/ci_check.py
       - name: Check plugin package
         run: |
-          python3 scripts/check_design.py
-          python3 scripts/check_design.py --self-test
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r scripts/check-requirements.txt
+          .venv/bin/python scripts/check_design.py
+          .venv/bin/python scripts/check_design.py --self-test

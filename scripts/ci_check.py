@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LINK = re.compile(r"!?\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))")
 REFERENCE = re.compile(r"^\s{0,3}\[[^\]]+\]:\s*(?:<([^>]+)>|(\S+))")
 FENCE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+BACKTICKS = re.compile(r"`+")
 TITLE = re.compile(r"[a-z][a-z0-9-]*(?:\([^)]+\))?!?: \S.*")
 
 
@@ -36,8 +37,31 @@ def markdown_targets(text):
         if fence:
             fence_char, fence_size = fence.group(1)[0], len(fence.group(1))
             continue
+        # ponytail: single-line code spans suffice here; use a Markdown parser if multiline spans matter.
+        runs = []
+        for match in BACKTICKS.finditer(line):
+            prefix = line[:match.start()]
+            escaped = (len(prefix) - len(prefix.rstrip("\\"))) % 2
+            if match.start() + escaped < match.end():
+                runs.append((match.start() + escaped, match.end()))
+        code_spans = []
+        index = 0
+        while index < len(runs):
+            closing = next((candidate for candidate in range(index + 1, len(runs))
+                            if runs[candidate][1] - runs[candidate][0] == runs[index][1] - runs[index][0]), None)
+            if closing is None:
+                index += 1
+                continue
+            code_spans.append((runs[index][0], runs[closing][1]))
+            index = closing + 1
         for pattern in (LINK, REFERENCE):
             for match in pattern.finditer(line):
+                target_start = match.start(1) if match.group(1) else match.start(2)
+                boundary = line.rfind("](" if pattern is LINK else "]:", match.start(), target_start)
+                if any(start <= match.start() < end or
+                       (boundary >= 0 and start < boundary + 2 and end > boundary)
+                       for start, end in code_spans):
+                    continue
                 yield match.group(1) or match.group(2)
 
 
@@ -92,6 +116,14 @@ def self_test():
     assert TITLE.fullmatch("fix!: reject invalid input")
     assert not TITLE.fullmatch("Add strict mode")
     assert list(markdown_targets("[a](./a.md)\n```md\n[b](missing.md)\n```")) == ["./a.md"]
+    assert list(markdown_targets("`[sample](missing.md)` [real](./a.md)")) == ["./a.md"]
+    assert not list(markdown_targets("[x]`code`(missing.md)"))
+    assert list(markdown_targets("[x](a`b`.md)")) == ["a`b`.md"]
+    assert list(markdown_targets("`[real](missing.md)``")) == ["missing.md"]
+    assert list(markdown_targets(r"\`[real](missing.md)\`")) == ["missing.md"]
+    assert not list(markdown_targets("[x `code](missing.md)`"))
+    assert list(markdown_targets("[`code`](missing.md)")) == ["missing.md"]
+    assert list(markdown_targets("[x `code` y](missing.md)")) == ["missing.md"]
     assert sensitive("secrets/.env.local")
     assert sensitive("keys/server.pem")
     assert not sensitive("docs/environment.md")

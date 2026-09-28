@@ -10,11 +10,11 @@
 | 可安装插件及统一 Skill | [插件清单](../plugins/repo-to-spec/plugin.json)、[Skill 入口](../plugins/repo-to-spec/skills/repo-to-spec/SKILL.md) |
 | 按需逆向方法、工具使用、规格标准与审查清单 | Skill 入口引用的 `plugins/repo-to-spec/skills/repo-to-spec/references/` 与 `assets/` |
 | 仓库贡献、标准格式与质量检查要求 | [CONTRIBUTING.md](../CONTRIBUTING.md)、[AGENTS.md](../AGENTS.md) |
-| 仓库结构检查和插件包检查 | `python3 scripts/ci_check.py`、`python3 scripts/check_design.py`；自检命令见 [AGENTS.md](../AGENTS.md) |
+| 仓库结构检查和插件包检查 | `python3 scripts/ci_check.py`；插件包检查的隔离环境命令见 [AGENTS.md](../AGENTS.md) |
 
-插件包结构检查验证清单 schema 标识、唯一 Skill frontmatter、仓库本地市场注册及插件包内 Markdown 本地引用。结构格式检查不证明宿主已实际加载，也不证明规格语义完整。
+插件包检查验证完整 manifest Schema、Skill YAML 字段、包内真实路径、仓库本地市场及 Markdown 本地引用。结构格式检查不证明宿主加载或规格语义完整；两者分别进行实际验证。
 
-真实仓库样例及结论见[样例规格](../plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)和[样例运行记录](examples/SKILL-PACK-VALIDATION-RUN.md)。作者自查与独立接收者检查分别记录；目前验证了一个选择性吸收的无图形界面能力，不能据此推断所有产品类型均适用。Codex CLI 试加载报告插件未安装，当前宿主加载仍未验证。
+真实仓库样例及结论见[包内样例规格](../plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)和[首次运行记录](examples/SKILL-PACK-VALIDATION-RUN.md)；Codex CLI 实际安装后的[新会话规格](examples/installed-cli-run/SYSTEM_SPEC/README.md)与[运行记录](examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)另行保存。作者自查与独立接收者检查分别记录。目前仅验证了一个选择性吸收的无图形界面能力；桌面宿主与其他产品类型仍未验证。
 
 ## 历史设计档案
 

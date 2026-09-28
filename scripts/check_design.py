@@ -11,6 +11,9 @@ import tempfile
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+import yaml
+from jsonschema import Draft202012Validator
+
 from ci_check import markdown_targets
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +21,22 @@ PACKAGE = ROOT / "plugins" / "repo-to-spec"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 SKILL_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 PLUGIN_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+SCHEMA_FILE = Path(__file__).parent / "schemas" / "plugin-1.0.0.json"
+
+
+class StrictLoader(yaml.SafeLoader):
+    def construct_mapping(self, node: yaml.MappingNode, deep: bool = False) -> dict:
+        seen = set()
+        for key_node, _ in node.value:
+            if key_node.tag == "tag:yaml.org,2002:merge":
+                continue
+            key = self.construct_object(key_node, deep=deep)
+            if not isinstance(key, str):
+                raise ValueError("SKILL.md frontmatter 字段名必须为文本")
+            if key in seen:
+                raise ValueError(f"SKILL.md frontmatter 字段重复：{key}")
+            seen.add(key)
+        return super().construct_mapping(node, deep=deep)
 
 
 def require(condition: bool, message: str) -> None:
@@ -25,7 +44,7 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
-def parse_frontmatter(content: str) -> dict[str, str]:
+def parse_frontmatter(content: str) -> dict[str, object]:
     lines = content.splitlines()
     require(bool(lines) and lines[0] == "---", "SKILL.md 必须以 YAML frontmatter 开始")
     try:
@@ -33,33 +52,53 @@ def parse_frontmatter(content: str) -> dict[str, str]:
     except ValueError as error:
         raise ValueError("SKILL.md 缺少 frontmatter 结束标记") from error
 
-    metadata = {}
-    for line in lines[1:end]:
-        key, separator, value = line.partition(":")
-        require(bool(separator and key.strip() and value.strip()), "SKILL.md frontmatter 行格式无效")
-        key, value = key.strip(), value.strip()
-        require(key not in metadata, f"SKILL.md frontmatter 字段重复：{key}")
-        metadata[key] = value
+    try:
+        metadata = yaml.load("\n".join(lines[1:end]) + "\n", Loader=StrictLoader)
+    except yaml.YAMLError as error:
+        raise ValueError(f"SKILL.md frontmatter YAML 无效：{error}") from error
+    require(isinstance(metadata, dict), "SKILL.md frontmatter 必须为对象")
     for key in ("name", "description"):
-        require(bool(metadata.get(key)), f"SKILL.md frontmatter 缺少 {key}")
-    require(bool(SKILL_NAME.fullmatch(metadata["name"])), "SKILL.md 的 name 格式无效")
+        value = metadata.get(key)
+        require(isinstance(value, str) and bool(value.strip()), f"SKILL.md {key} 必须为非空文本")
+    require(len(metadata["name"]) <= 64 and bool(SKILL_NAME.fullmatch(metadata["name"])),
+            "SKILL.md 的 name 格式或长度无效")
+    require(len(metadata["description"]) <= 1024, "SKILL.md description 超过 1024 字符")
+    if "compatibility" in metadata:
+        value = metadata["compatibility"]
+        require(isinstance(value, str) and 1 <= len(value) <= 500,
+                "SKILL.md compatibility 必须是 1–500 字符文本")
+    if "metadata" in metadata:
+        value = metadata["metadata"]
+        require(isinstance(value, dict) and all(isinstance(key, str) and isinstance(item, str)
+                                                for key, item in value.items()),
+                "SKILL.md metadata 必须是文本到文本的映射")
+    if "allowed-tools" in metadata:
+        require(isinstance(metadata["allowed-tools"], str), "SKILL.md allowed-tools 必须是文本")
     return metadata
 
 
+def require_inside(package: Path, path: Path) -> Path:
+    try:
+        resolved = path.resolve(strict=True)
+        resolved.relative_to(package)
+    except (OSError, RuntimeError, ValueError) as error:
+        raise ValueError(f"插件包路径不存在或越界：{path}") from error
+    return resolved
+
+
 def check_package_links(package: Path) -> int:
-    package = package.resolve()
     markdown = sorted(package.rglob("*.md"))
     for source in markdown:
+        require_inside(package, source)
         for target in markdown_targets(source.read_text(encoding="utf-8")):
             parsed = urlsplit(target)
             if parsed.scheme or parsed.netloc:
                 continue
-            destination = (source.parent / unquote(parsed.path)).resolve() if parsed.path else source
+            destination = source.parent / unquote(parsed.path) if parsed.path else source
             try:
-                destination.relative_to(package)
+                require_inside(package, destination)
             except ValueError as error:
-                raise ValueError(f"{source.relative_to(package)}: 包内链接越界：{target}") from error
-            require(destination.exists(), f"{source.relative_to(package)}: 本地链接不存在：{target}")
+                raise ValueError(f"{source.relative_to(package)}: 本地链接不存在或越界：{target}") from error
     return len(markdown)
 
 
@@ -90,13 +129,17 @@ def check_marketplace(path: Path, package: Path) -> None:
 
 
 def check_package(package: Path, marketplace: Path | None = None) -> dict[str, int]:
+    require(package.is_dir(), "插件目录不存在")
+    package = package.resolve(strict=True)
+    for item in package.rglob("*"):
+        require_inside(package, item)
     manifest_path = package / "plugin.json"
+    require_inside(package, manifest_path)
     require(manifest_path.is_file(), "缺少 plugin.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    require(isinstance(manifest, dict), "plugin.json 根必须为对象")
-    for key in ("$schema", "name"):
-        require(isinstance(manifest.get(key), str) and bool(manifest[key].strip()), f"plugin.json 缺少 {key}")
-    require(manifest["$schema"] == PLUGIN_SCHEMA, "plugin.json 必须声明 Agent Plugins 1.0.0 schema")
+    schema = json.loads(SCHEMA_FILE.read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(schema).iter_errors(manifest))
+    require(not errors, f"plugin.json 不符合 Agent Plugins 1.0.0 schema：{errors[0].message}" if errors else "")
     require(bool(SKILL_NAME.fullmatch(manifest["name"])), "plugin.json name 必须为 kebab-case")
     require(manifest["name"] == package.name, "plugin.json name 必须与插件目录名一致")
 
@@ -105,6 +148,7 @@ def check_package(package: Path, marketplace: Path | None = None) -> dict[str, i
     require(len(skills) == len(all_skills) == 1,
             "必须有且只有一个位于 skills/<name>/SKILL.md 的可发现入口")
     skill = skills[0]
+    require_inside(package, skill)
     metadata = parse_frontmatter(skill.read_text(encoding="utf-8"))
     require(metadata["name"] == skill.parent.name, "Skill frontmatter name 必须与目录名一致")
     markdown_files = check_package_links(package)
@@ -114,15 +158,27 @@ def check_package(package: Path, marketplace: Path | None = None) -> dict[str, i
 
 
 def self_test() -> None:
+    def reject(operation, reason: str) -> None:
+        try:
+            operation()
+        except ValueError:
+            return
+        raise AssertionError(reason)
+
     valid = "---\nname: demo\ndescription: A sample skill\n---\n# Sample\n"
     assert parse_frontmatter(valid) == {"name": "demo", "description": "A sample skill"}
-    for invalid in ("# No frontmatter", "---\nname: sample\n", "---\nname: sample\n---\n"):
-        try:
-            parse_frontmatter(invalid)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("invalid frontmatter must fail")
+    assert parse_frontmatter('---\nname: "demo"\ndescription: |\n  First line\n  Second line\n---\n')["description"] == "First line\nSecond line\n"
+    assert parse_frontmatter('---\nbase: &base {description: sample}\n<<: *base\nname: demo\n---\n')["description"] == "sample"
+    for invalid in ("# No frontmatter", "---\nname: sample\n", "---\nname: sample\n---\n",
+                    "---\nname: demo\ndescription: []\n---\n",
+                    '---\nname: demo\ndescription: ""\n---\n',
+                    "---\nname: demo\ndescription: [\n---\n",
+                    "---\nname: demo\ndescription: text\ncompatibility: []\n---\n",
+                    "---\nname: demo\ndescription: text\nmetadata: []\n---\n",
+                    "---\nname: demo\ndescription: text\nmetadata: {version: 1}\n---\n",
+                    "---\nname: demo\ndescription: text\nallowed-tools: []\n---\n",
+                    "---\nname: demo\nname: demo\ndescription: text\n---\n"):
+        reject(lambda: parse_frontmatter(invalid), "invalid frontmatter must fail")
 
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
@@ -142,53 +198,38 @@ def self_test() -> None:
             "category": "Productivity"
         }], "name": "demo-local", "interface": {"displayName": "Demo"}}), encoding="utf-8")
         assert check_package(package, marketplace)["skills"] == 1
-        (package / "plugin.json").write_text(
-            json.dumps({"$schema": "schema.json", "name": "demo"}), encoding="utf-8"
-        )
-        try:
-            check_package(package, marketplace)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("unsupported plugin schema must fail")
-        (package / "plugin.json").write_text(
-            json.dumps({"$schema": PLUGIN_SCHEMA, "name": "Bad Name"}), encoding="utf-8"
-        )
-        try:
-            check_package(package, marketplace)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("invalid plugin names must fail")
-        (package / "plugin.json").write_text(
-            json.dumps({"$schema": PLUGIN_SCHEMA, "name": "demo"}), encoding="utf-8"
-        )
+        manifest = package / "plugin.json"
+        for field, value in (("$schema", "schema.json"), ("name", "Bad Name"),
+                             ("version", 123), ("description", [])):
+            data = {"$schema": PLUGIN_SCHEMA, "name": "demo", field: value}
+            manifest.write_text(json.dumps(data), encoding="utf-8")
+            reject(lambda: check_package(package, marketplace), f"invalid manifest {field} must fail")
+        manifest.write_text(json.dumps({"$schema": PLUGIN_SCHEMA, "name": "demo"}), encoding="utf-8")
+        skill = skill_dir / "SKILL.md"
+        skill.write_text('---\nname: "demo"\ndescription: |\n  Sample skill\n---\n[ref](../../reference.md)\n', encoding="utf-8")
+        assert check_package(package, marketplace)["skills"] == 1
+        skill.write_text(valid + "[ref](../../reference.md)\n", encoding="utf-8")
         (package / "skills" / "extra").mkdir()
         (package / "skills" / "extra" / "SKILL.md").write_text(valid.replace("demo", "extra"), encoding="utf-8")
-        try:
-            check_package(package, marketplace)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("multiple skill entry points must fail")
+        reject(lambda: check_package(package, marketplace), "multiple skill entry points must fail")
         (package / "skills" / "extra" / "SKILL.md").unlink()
         nested = package / "skills" / "nested" / "hidden" / "SKILL.md"
         nested.parent.mkdir(parents=True)
         nested.write_text(valid, encoding="utf-8")
-        try:
-            check_package(package, marketplace)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("undiscoverable nested skill must fail")
+        reject(lambda: check_package(package, marketplace), "undiscoverable nested skill must fail")
         nested.unlink()
-        (skill_dir / "SKILL.md").write_text(valid + "[outside](../../../outside.md)\n", encoding="utf-8")
-        try:
-            check_package(package, marketplace)
-        except ValueError:
-            pass
-        else:
-            raise AssertionError("package links escaping the package must fail")
+        skill.write_text(valid + "[outside](../../../outside.md)\n", encoding="utf-8")
+        reject(lambda: check_package(package, marketplace), "package links escaping the package must fail")
+        skill.write_text(valid, encoding="utf-8")
+        outside = root / "outside.md"
+        outside.write_text(valid, encoding="utf-8")
+        for target in (manifest, skill, package / "reference.md"):
+            original = target.read_bytes()
+            target.unlink()
+            target.symlink_to(outside)
+            reject(lambda: check_package(package, marketplace), f"symlink escaping package must fail: {target}")
+            target.unlink()
+            target.write_bytes(original)
 
 
 def main() -> int:
