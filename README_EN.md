@@ -91,10 +91,9 @@ This project does not determine whether a particular repository's license, addit
 ## Project documentation
 
 - [VISION.md](./VISION.md): project motivation, target state, product commitments, and long-term design principles.
-- [ARCHITECTURE.md](./ARCHITECTURE.md): the complete target architecture and system boundaries.
-- [ROADMAP.md](./ROADMAP.md): capability-dependent implementation and validation milestones.
-- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues): actionable work and progress.
-- [Design documentation](./docs/README.md): domain model, execution protocol, package proposal, quality model, and decisions.
+- [ARCHITECTURE.md](./ARCHITECTURE.md): execution boundaries and delivery flow for the Skill-led plugin.
+- [ROADMAP.md](./ROADMAP.md): the former phased roadmap is historical; current work follows the plugin and actual validation results.
+- [Design documentation](./docs/README.md): current implementation entry points, verification scope, and historical design records.
 - [CONTRIBUTING.md](./CONTRIBUTING.md): contribution workflow, quality requirements, and plugin/skill format conventions.
 - [AGENTS.md](./AGENTS.md): hard constraints for coding agents working in this repository.
 
@@ -102,9 +101,17 @@ The README is limited to public positioning and delivery boundaries. Architectur
 
 ## Status
 
-The project is currently designing the plugin, skills, and runtime capabilities backward from the target handoff. The repository contains basic CI and design-registry checks; it does not yet provide an installable plugin, a released generation command, or product-validated specification generation.
+The repository contains an installable plugin package with one unified Skill entry and on-demand investigation methods, tool guidance, specification standards, templates, and review checks. The host Agent performs the work; no separate runtime is required.
 
-This README describes the stable product positioning; [VISION.md](./VISION.md) describes the target state. The [M0 design baseline](./docs/reviews/M0-ADOPTION.md) has been adopted within its recorded scope; this does not mean product capabilities are implemented or every detailed design is accepted. See the [source snapshot](./docs/CURRENT-STATE.md) and the [capability map](./docs/planning/CAPABILITY-MAP.md).
+Package structure and metadata checks do not establish real host loading, sample specification quality, or independent consumption. See [current status and verification records](./docs/README.md) for results and uncovered areas. The former S1–S6, Cxx, M0–M6, and Axx baseline and roadmap remain historical records, not an implementation checklist.
+
+## Install and use
+
+The local marketplace in `.agents/plugins/marketplace.json` registers `Repo-to-Spec Local`. In the Codex desktop app, restart the app, open the Plugins Directory, choose this local marketplace, and install Repo-to-Spec. Then start a new chat and invoke the `repo-to-spec` Skill. These local marketplace steps follow the [OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins). Host loading has not been verified in the current session.
+
+Provide the repository location, target scope, intended environment, and necessary product context. For example: “Use Repo-to-Spec to analyze the import capability in `/path/to/reference-repo` for a local desktop product. Preserve the existing user interaction, include necessary dependencies, and deliver a `SYSTEM_SPEC/` that can be implemented without the source repository.”
+
+A verified sample covers selective adoption of a read-only static pre-check for local Agent Skill packages. See the [sample specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [sample run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) for its scope, source revision, author review, independent-consumer findings, and missing-input case. An independent consumer found it implementable within that declared scope; this does not establish host loading or support for other product types.
 
 ## Contributing
 

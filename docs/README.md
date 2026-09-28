@@ -1,54 +1,25 @@
-# 设计文档入口
+# 文档与验证入口
 
-> 基线：DB-20260928 · 状态：已采纳 · 类型：设计治理
-> 本文承接现有愿景，不表示能力已经实现；变更与采纳规则见文档入口。
+## 当前有效材料
 
-
-## 这套文件是什么
-
-这是一套面向完整愿景的目标设计与建设路径提案。它补齐愿景与实现之间的设计层，不把项目改成阶段性摘要生成器，也不宣称插件已经可安装。
-
-阅读次序是：现有 [愿景](../VISION.md) → [目标架构](../ARCHITECTURE.md) → [建设路径](../ROADMAP.md)。审阅本次调整先看 [现状评估](reviews/BASELINE-REVIEW.md)。具体任务按下表进入，不要求每次加载全部文档。
-
-| 需要回答的问题 | 权威位置 |
+| 需要了解 | 位置 |
 | --- | --- |
-| 为什么存在、承诺什么 | [VISION.md](../VISION.md)，保持现有正文不变 |
-| 当前代码实际具备什么 | [CURRENT-STATE.md](CURRENT-STATE.md)，固定提交的事实快照 |
-| 完整系统如何分工 | [ARCHITECTURE.md](../ARCHITECTURE.md) |
-| 交付哪些产品、体验与技术内容 | [PRODUCT-DELIVERY.md](product/PRODUCT-DELIVERY.md) |
-| 使用哪些对象、术语与关系 | [DOMAIN-MODEL.md](architecture/DOMAIN-MODEL.md) |
-| Agent 如何工作、何时停下或继续 | [EXECUTION-PROTOCOL.md](architecture/EXECUTION-PROTOCOL.md) |
-| 工作状态、内部依据、版本如何保存 | [STATE-AND-PROVENANCE.md](architecture/STATE-AND-PROVENANCE.md) |
-| 套件如何组织与表达 | [SYSTEM-SPEC.md](architecture/SYSTEM-SPEC.md) |
-| 如何判断已足够、仍有何缺口 | [COVERAGE-AND-QUALITY.md](architecture/COVERAGE-AND-QUALITY.md) |
-| 如何利用原生能力和外部工具 | [PROVIDER-MODEL.md](architecture/PROVIDER-MODEL.md) |
-| 如何分发插件、组织技能、适配宿主 | [PLUGIN-AND-SKILLS.md](architecture/PLUGIN-AND-SKILLS.md) |
-| 如何隔离参考材料与开发交接 | [SECURITY-AND-HANDOFF.md](architecture/SECURITY-AND-HANDOFF.md) |
-| 如何进行独立消费和符合性验证 | [CONFORMANCE-MODEL.md](architecture/CONFORMANCE-MODEL.md) |
-| 每个机制必须满足什么 | [契约目录](../contracts/README.md) |
-| 怎样走向完整愿景 | [ROADMAP.md](../ROADMAP.md)、[能力地图](planning/CAPABILITY-MAP.md) |
-| 依赖、状态和验收关联如何维护 | [设计登记表](planning/design-baseline.json) |
-| 怎样评测与避免退化 | [VALIDATION-STRATEGY.md](planning/VALIDATION-STRATEGY.md) |
-| 哪些决策尚需证据、谁来决定 | [OPEN-DECISIONS.md](decisions/OPEN-DECISIONS.md) |
-| 为什么选择这条路线 | [ADR 索引](decisions/README.md) |
-| 怎样拆成可执行工作 | [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues) 与 [Milestones](https://github.com/MC0571/Repo-to-Spec-Plugin/milestones) |
+| 当前插件与样例验证结果、限制 | [CURRENT-STATE.md](CURRENT-STATE.md) |
+| 产品目标、完整规格边界与长期原则 | [VISION.md](../VISION.md) |
+| 当前 Skill-led 执行边界 | [ARCHITECTURE.md](../ARCHITECTURE.md) |
+| 可安装插件及统一 Skill | [插件清单](../plugins/repo-to-spec/plugin.json)、[Skill 入口](../plugins/repo-to-spec/skills/repo-to-spec/SKILL.md) |
+| 按需逆向方法、工具使用、规格标准与审查清单 | Skill 入口引用的 `plugins/repo-to-spec/skills/repo-to-spec/references/` 与 `assets/` |
+| 仓库贡献、标准格式与质量检查要求 | [CONTRIBUTING.md](../CONTRIBUTING.md)、[AGENTS.md](../AGENTS.md) |
+| 仓库结构检查和插件包检查 | `python3 scripts/ci_check.py`、`python3 scripts/check_design.py`；自检命令见 [AGENTS.md](../AGENTS.md) |
 
-## 权威与状态
+插件包结构检查验证清单 schema 标识、唯一 Skill frontmatter、仓库本地市场注册及插件包内 Markdown 本地引用。结构格式检查不证明宿主已实际加载，也不证明规格语义完整。
 
-现有 `VISION.md`、`README.md`、`AGENTS.md`、`CONTRIBUTING.md` 是读取到的仓库基础。M0 目标设计基线的采纳范围与依据见 [维护者记录](reviews/M0-ADOPTION.md)；未列入该范围的具体机制仍按各文件状态评审。采纳设计不等于批准“六个服务”“规格编译器”或未经验证的文件存储机制。
+真实仓库样例及结论见[样例规格](../plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)和[样例运行记录](examples/SKILL-PACK-VALIDATION-RUN.md)。作者自查与独立接收者检查分别记录；目前验证了一个选择性吸收的无图形界面能力，不能据此推断所有产品类型均适用。Codex CLI 试加载报告插件未安装，当前宿主加载仍未验证。
 
-文件状态采用 `proposed / accepted / superseded`。只有维护者明确接受、并在 PR 或决策记录中留下依据后，才能标记 `accepted`；合入草案不自动意味着接受所有设计选择。基线采纳不自动接受每项 Cxx 的详细设计；能力是否实现、是否验证、是否具有回归保护，另行记录，不能从文档状态推导。
+## 历史设计档案
 
-冲突处理不是简单“更底层或更严格的文件自动获胜”。目标设计不得静默修改愿景；契约不得静默推翻已接受设计；实现与契约不一致必须作为缺陷或正式变更处理。发现冲突时记录影响，停止受影响的发布判断，通过修订对应权威文件解决。
+`docs/architecture/`、`docs/product/`、`docs/planning/`、`docs/decisions/`、`docs/reviews/` 与 `contracts/` 中带有 `DB-20260928` 的材料记录了此前的设计基线。基线中的 S1–S6 分区、Cxx 能力、M0–M6 阶段、Axx 验收、B-* 评测集、Provider 生命周期及持久化状态模型现已过时；保留它们是为追溯设计过程，不构成当前插件必须实现的模块、服务或流程。
 
-## 单一事实来源
+仍有效的产品判断已归纳到当前 `VISION.md`、`ARCHITECTURE.md` 和插件 Skill：忠实恢复声明范围、同时设计产品体验和必要逻辑技术、处理选择性吸收的传递依赖、标注事实/推导/批准改动/未知、保持正式套件自包含、按实际宿主能力使用工具，以及区分结构检查、作者自查和独立消费检查。安全、隐私、授权和贡献约束以当前 [AGENTS.md](../AGENTS.md) 与 [CONTRIBUTING.md](../CONTRIBUTING.md) 为准。
 
-领域概念的定义只在领域模型维护；可执行约束只在契约维护；能力、目标阶段及验收的关联和证据成熟度只在 `design-baseline.json` 维护。GitHub 管理工作项及其执行进展，关闭 Issue 或 Milestone 不自动提升登记表状态。架构和路线图引用这些内容，不复制第二份状态表。
-
-`SYSTEM_SPEC/` 是 Repo-to-Spec 将来生成的**目标产品交付物**，不是本仓库设计文档的根目录。`docs/` 描述 Repo-to-Spec 自己；两种规格不可混淆。内部来源追踪也不属于下游实施包。
-
-## 本次附带的可执行能力
-
-新增 `scripts/check_design.py` 只校验本设计包的文件、登记表引用、依赖环、状态证据及契约关联；它不是 Repo-to-Spec 的规格生成器或产品完备性证明器。使用方法与限制见 [验证策略](planning/VALIDATION-STRATEGY.md)。
-
-没有为了填满目录而新增 `plugin.json`、`SKILL.md` 或 MCP 服务。真正实现并验证组件后再提供这些可执行入口。
+[M0-ADOPTION.md](reviews/M0-ADOPTION.md) 记录旧基线曾获采纳；原 [设计登记表](planning/design-baseline.json) 的顶层状态现为 `superseded`。[能力地图](planning/CAPABILITY-MAP.md)、[验证策略](planning/VALIDATION-STRATEGY.md) 和 ADR 仅供历史回顾，不再控制开发步骤或产品验收。旧文件内的“已采纳”指当时状态，不表示其机制仍是当前实现要求。

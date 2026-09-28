@@ -14,9 +14,9 @@
 
 ## 命令
 
-当前仓库没有安装、开发、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 的单一 CI 检查使用 Python 3 标准库运行 `python3 scripts/ci_check.py`，无需安装依赖；CI 检查逻辑的本地自检命令为 `python3 scripts/ci_check.py --self-test`。
+当前仓库没有安装、通用测试框架、lint、typecheck 或 build 命令。GitHub Actions 运行仓库检查 `python3 scripts/ci_check.py`，自检命令为 `python3 scripts/ci_check.py --self-test`。插件包结构检查为 `python3 scripts/check_design.py`，自检为 `python3 scripts/check_design.py --self-test`；两者都只依赖 Python 标准库。
 
-设计文档与登记表检查为 `python3 scripts/check_design.py`，自检为 `python3 scripts/check_design.py --self-test`，同样只依赖 Python 标准库。这些检查不代表产品运行时或产品级完备性验证。
+这些检查不代表宿主实际加载成功，也不证明生成规格的产品、体验或逻辑技术设计语义完整。
 
 因此：
 
@@ -33,7 +33,7 @@
 - 不要把参考仓库的目录、内部符号、私有数据结构、偶然模块边界或可替换算法直接提升为规范要求。
 - 不要根据“通常如此”补写目标产品行为。材料不足或互相冲突时，继续调查或保留未决状态；最终交付前必须解决所有会影响独立实施的重要问题。
 - 明确区分“规范必须保持的结果与约束”和“新实现可以自主选择的实现方式”。
-- 技能按渐进式披露组织：入口保持简洁，仅在当前任务需要时加载专业流程、工具说明、模板和检查规则。
+- 保持一个统一 Skill 用户入口；入口保持简洁，仅在当前任务需要时加载专业流程、工具说明、模板和检查规则。
 - 新增或修改插件、技能时，按 `CONTRIBUTING.md` 的“插件与技能格式”及其中链接的标准核对结构、元数据和实际验证结果。
 - 核心行为不得依赖未声明的外部环境才能成立。
 
@@ -97,8 +97,7 @@
 - 长期目标与产品原则：`VISION.md`
 - 开发流程、测试与 PR 要求：`CONTRIBUTING.md`
 - 英文项目说明：`README_EN.md`
-- 目标架构与建设顺序：`ARCHITECTURE.md`、`ROADMAP.md`
-- 按任务选择详细设计、契约与决策：`docs/README.md`
-- 涉及目标能力、阶段或验收变更：`docs/planning/design-baseline.json` 与 `docs/planning/VALIDATION-STRATEGY.md`
+- Skill-led 执行边界：`ARCHITECTURE.md`；旧阶段路线图已标为历史：`ROADMAP.md`
+- 插件方法、工具指引、输出标准、模板和自查：`plugins/repo-to-spec/skills/repo-to-spec/`；历史设计入口：`docs/README.md`
 
 新增长期有效的架构、数据模型、接口或安全文档后，只在这里增加索引，不复制全文。

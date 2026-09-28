@@ -91,10 +91,9 @@ Repo-to-Spec 不是：
 ## 项目文档
 
 - [VISION.md](./VISION.md)：项目动机、目标状态、产品承诺与长期设计原则。
-- [ARCHITECTURE.md](./ARCHITECTURE.md)：完整目标架构与系统边界。
-- [ROADMAP.md](./ROADMAP.md)：按能力依赖组织的建设与验证路径。
-- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues)：当前可执行工作及进展。
-- [设计文档入口](./docs/README.md)：领域模型、执行协议、套件格式提案、质量与决策记录。
+- [ARCHITECTURE.md](./ARCHITECTURE.md)：Skill-led 插件的执行边界与交付流程。
+- [ROADMAP.md](./ROADMAP.md)：原分阶段路线图已过时，当前开发以实际插件和验证结果为准。
+- [设计文档入口](./docs/README.md)：当前实现入口、验证范围与历史设计档案。
 - [CONTRIBUTING.md](./CONTRIBUTING.md)：贡献流程、质量要求和插件/技能格式约定。
 - [AGENTS.md](./AGENTS.md)：编程智能体在本仓库中工作的硬约束。
 
@@ -102,9 +101,17 @@ README 只说明公开定位和交付边界；具体架构、数据模型和实�
 
 ## 当前状态
 
-项目正在从目标状态反推插件、技能和运行能力的设计。仓库已有基础 CI 和设计登记表检查；尚未提供可安装插件、正式生成命令或经过产品级验证的系统规格生成能力。
+仓库现有可安装插件包，提供一个统一 Skill 入口及按需读取的调查方法、工具指南、规格标准、模板和检查清单。Skill 由宿主 Agent 执行，不要求独立运行时。
 
-README 描述稳定的产品定位；[VISION.md](./VISION.md) 描述目标状态；[M0 设计基线](./docs/reviews/M0-ADOPTION.md)已在限定范围内采纳，不代表产品能力实现或全部详细设计获批。源快照见 [当前状态](./docs/CURRENT-STATE.md)，目标能力进展见 [能力地图](./docs/planning/CAPABILITY-MAP.md)。
+包结构和元数据检查不等同于宿主真实加载、样例规格质量或独立消费验证；这些结果及未覆盖范围见 [当前状态与验证记录](./docs/README.md)。旧的 S1–S6、Cxx、M0–M6 和 Axx 基线及其路线图保留为历史档案，不再是实现清单。
+
+## 安装与使用
+
+本地插件市场已在 `.agents/plugins/marketplace.json` 注册 `Repo-to-Spec Local`。在 Codex 桌面端重启应用后，打开 Plugins Directory，选择该本地市场并安装 Repo-to-Spec；随后开启新对话并调用 `repo-to-spec` Skill。此本地市场与安装步骤遵循 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)。当前会话尚未验证宿主实际加载。
+
+开始时提供仓库位置、目标范围、目标使用环境和必要产品上下文，例如：“用 Repo-to-Spec 分析 `/path/to/reference-repo` 的导入能力，面向本地桌面产品，保留原有用户交互；请覆盖必要依赖并交付可脱离来源仓库实施的 `SYSTEM_SPEC/`。”
+
+已验证样例为对本地 Agent Skill 包做只读静态预检查的选择性吸收。交付件在 [样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)，范围、来源版本、作者自查、独立消费发现与缺材料反例见[样例运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)。独立接收者复查确认其在声明的静态校验范围内可独立实施；这不证明插件宿主加载成功或支持其他产品类型。
 
 ## 贡献
 
