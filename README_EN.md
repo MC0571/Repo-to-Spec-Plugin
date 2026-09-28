@@ -93,6 +93,7 @@ This project does not determine whether a particular repository's license, addit
 - [VISION.md](./VISION.md): project motivation, target state, product commitments, and long-term design principles.
 - [ARCHITECTURE.md](./ARCHITECTURE.md): the complete target architecture and system boundaries.
 - [ROADMAP.md](./ROADMAP.md): capability-dependent implementation and validation milestones.
+- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues): actionable work and progress.
 - [Design documentation](./docs/README.md): domain model, execution protocol, package proposal, quality model, and decisions.
 - [CONTRIBUTING.md](./CONTRIBUTING.md): contribution workflow, quality requirements, and plugin/skill format conventions.
 - [AGENTS.md](./AGENTS.md): hard constraints for coding agents working in this repository.

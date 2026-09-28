@@ -149,7 +149,10 @@ Repo-to-Spec 的公开交付目标是形成可供独立团队直接使用的系�
 - `AGENTS.md`：编程智能体必须遵守的仓库级硬约束；
 - `ARCHITECTURE.md`：目标系统职责与边界；`ROADMAP.md`：建设依赖和阶段出口；
 - `docs/` 与 `contracts/`：领域、执行、套件、质量、接口、安全和决策，入口见 [设计文档](./docs/README.md)；
-- `docs/planning/design-baseline.json`：目标能力、里程碑、验收关联及成熟度状态。
+- `docs/planning/design-baseline.json`：目标能力、里程碑、验收关联及成熟度状态；
+- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues) / [Milestones](https://github.com/MC0571/Repo-to-Spec-Plugin/milestones)：可执行工作、依赖、负责人、优先级、排期和进展。关闭工作项不自动改变设计登记表的证据状态。
+
+可执行 Issue 应写明目标结果、适用的 Cxx/Mx/Axx 与合同、范围内外、依赖、验证方法、失败反例和完成证据；关键事实或决策未确定时标明暂停条件。工作项可以拆为多个 PR，但关闭前须有与该工作相称的实际验证。
 
 以下变化通常需要同步检查相关文档是否更新：
 
