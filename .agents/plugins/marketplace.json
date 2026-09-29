@@ -8,7 +8,7 @@
       "name": "repo-to-spec",
       "source": {
         "source": "local",
-        "path": "./plugins/repo-to-spec"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",

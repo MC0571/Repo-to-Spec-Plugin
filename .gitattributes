@@ -1,2 +1,0 @@
-# 原始换行/空白向量故意保留尾随空白，供精确文本兼容试跑回查。
-docs/examples/method-enhancement-trial/final-installed-original/SYSTEM_SPEC/fixtures/splitlines/results.jsonl whitespace=-blank-at-eol,-space-before-tab

@@ -88,37 +88,32 @@ Repo-to-Spec 不是：
 
 本项目也不判断特定仓库的许可证、附加条款或其他政策是否允许某项具体使用，不提供法律意见，也不保证生成规格或后续实现自动取得任何授权。使用者仍需自行确认适用的许可、合同和合规要求。
 
-## 项目文档
+## 仓库内容
 
-- [VISION.md](./VISION.md)：项目动机、目标状态、产品承诺与长期设计原则。
-- [ARCHITECTURE.md](./ARCHITECTURE.md)：Skill-led 插件的执行边界与交付流程。
-- [ROADMAP.md](./ROADMAP.md)：原分阶段路线图已过时，当前开发以实际插件和验证结果为准。
-- [设计文档入口](./docs/README.md)：当前实现入口、验证范围与历史设计档案。
-- [CONTRIBUTING.md](./CONTRIBUTING.md)：贡献流程、质量要求和插件/技能格式约定。
-- [AGENTS.md](./AGENTS.md)：编程智能体在本仓库中工作的硬约束。
+仓库根目录就是 Codex 插件。 [`.codex-plugin/plugin.json`](./.codex-plugin/plugin.json) 声明插件；[统一 Skill](./repo-to-spec/SKILL.md) 位于根层 `repo-to-spec/`，通过其 `references/` 和 `assets/` 按需读取方法、场景、工具操作、输出标准与模板。宿主 Agent 执行工作，插件没有独立运行时或必装的第三方调查工具。
 
-README 只说明公开定位和交付边界；具体架构、数据模型和实施方案在相应设计文档中维护，不在这里重复。
+[VISION.md](./VISION.md) 保留长期产品目标；[CONTRIBUTING.md](./CONTRIBUTING.md) 和 [AGENTS.md](./AGENTS.md) 说明仓库维护、安全与检查边界。旧阶段设计、工作登记和试跑档案已从当前目录移除，可从 Git 历史查看。
 
-## 当前状态
-
-仓库现有可安装插件包，提供一个统一 Skill 入口及按问题读取的能力边界、行为恢复、体验视觉、数据接口、实现解耦、选择性吸收与规格审查方法，并配有完整产品、UI、CLI/API、异步批量、SDK 和目标吸收的场景指导，以及问题导向的工具操作、可填写的输出表达和教学例。Skill 由宿主 Agent 执行，不要求独立运行时。
-
-包结构和元数据检查不等同于宿主真实加载、样例规格质量或独立消费验证；这些结果及未覆盖范围见 [当前状态与验证记录](./docs/README.md)。旧的 S1–S6、Cxx、M0–M6 和 Axx 基线及其路线图保留为历史档案，不再是实现清单。
+结构检查只能核对清单、Skill、资源引用与仓库链接；它不能证明规格内容完整或某个宿主已成功加载。当前布局的宿主验证范围见下文。
 
 ## 安装与使用
 
-本地插件市场已在 `.agents/plugins/marketplace.json` 注册 `Repo-to-Spec Local`。在仓库根目录用 Codex CLI 安装：
+本地插件市场在 [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json) 注册仓库根目录。在仓库根目录用 Codex CLI 安装：
 
 ```sh
 codex plugin marketplace add .
 codex plugin add repo-to-spec@repo-to-spec-local
 ```
 
-随后开启新会话并调用 `$repo-to-spec`。Codex CLI `0.158.0-alpha.2.1` 的安装、新会话加载和样例执行已有[实际记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)。桌面端可按 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)在 Plugins Directory 安装；本仓库尚未实测桌面端加载。
+随后开启新会话并调用 `$repo-to-spec`。此布局已用 Codex CLI `0.158.0-alpha.2.1` 在隔离目录安装并发现 Skill。桌面端可按 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)在 Plugins Directory 安装；本仓库尚未实测桌面端加载。
+
+本地市场安装会复制当前仓库工作区；安装前请使用不含私有文件和秘密的干净检出，避免把未跟踪或忽略的文件一同复制到插件缓存。
 
 开始时提供仓库位置、目标范围、目标使用环境和必要产品上下文，例如：“用 Repo-to-Spec 分析 `/path/to/reference-repo` 的导入能力，面向本地桌面产品，保留原有用户交互；请覆盖必要依赖并交付可脱离来源仓库实施的 `SYSTEM_SPEC/`。”
 
-静态预检查的[包内样例规格](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/)及[首次运行记录](./docs/examples/SKILL-PACK-VALIDATION-RUN.md)保留独立消费检查；[安装后新会话规格](./docs/examples/installed-cli-run/SYSTEM_SPEC/)及[验证记录](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md)覆盖早期真实加载和缺材料场景。深化方法的[首次试跑](./docs/examples/METHOD-DEPTH-VALIDATION-RUN.md)与本轮[增强方法的新会话试跑](./docs/examples/METHOD-ENHANCEMENT-VALIDATION-RUN.md)分别保留原始、评审修订和未闭合依赖；后者在修订后重新安装并运行了较窄的评分报告场景。这些验证仍只覆盖无图形界面的局部能力。
+此前在旧包布局下完成过真实仓库的局部、无 UI 场景试跑和独立消费检查；相关原始记录保留在 Git 提交 `0919f72`，不作为新布局的安装验证。新布局尚未证明完整产品或 UI 场景的稳定性。
+
+**本次布局验证（2026-09-29）：**在新的隔离 `CODEX_HOME` 安装本仓库后，新会话从安装缓存读取了 `repo-to-spec/SKILL.md` 和 `references/investigation.md`。缺少参考仓库的请求被正确标为输入不足，没有伪造 `SYSTEM_SPEC/`。这验证了 Codex CLI 的安装、资源读取与该缺输入分支；未验证桌面端或新布局下的完整规格生成。
 
 ## 贡献
 

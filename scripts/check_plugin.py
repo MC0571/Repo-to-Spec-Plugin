@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check plugin metadata, its single Skill entry, local links, and marketplace entry."""
+"""Check the root Codex plugin, its single Skill, links, and marketplace entry."""
 
 from __future__ import annotations
 
@@ -12,16 +12,13 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 import yaml
-from jsonschema import Draft202012Validator
-
 from ci_check import markdown_targets
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = ROOT / "plugins" / "repo-to-spec"
+PACKAGE = ROOT
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 SKILL_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
-PLUGIN_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
-SCHEMA_FILE = Path(__file__).parent / "schemas" / "plugin-1.0.0.json"
+PLUGIN_NAME = "repo-to-spec"
 
 
 class StrictLoader(yaml.SafeLoader):
@@ -86,8 +83,8 @@ def require_inside(package: Path, path: Path) -> Path:
     return resolved
 
 
-def check_package_links(package: Path) -> int:
-    markdown = sorted(package.rglob("*.md"))
+def check_package_links(package: Path, skill_dir: Path) -> int:
+    markdown = sorted(skill_dir.rglob("*.md"))
     for source in markdown:
         require_inside(package, source)
         for target in markdown_targets(source.read_text(encoding="utf-8")):
@@ -102,14 +99,14 @@ def check_package_links(package: Path) -> int:
     return len(markdown)
 
 
-def check_marketplace(path: Path, package: Path) -> None:
+def check_marketplace(path: Path, package: Path, plugin_name: str) -> None:
     require(path.is_file(), "缺少本地 marketplace.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(data, dict) and isinstance(data.get("plugins"), list), "marketplace.json 格式无效")
     require(isinstance(data.get("name"), str) and bool(data["name"].strip()), "marketplace name 缺失")
     interface = data.get("interface")
     require(isinstance(interface, dict) and bool(interface.get("displayName")), "marketplace displayName 缺失")
-    entries = [item for item in data["plugins"] if isinstance(item, dict) and item.get("name") == package.name]
+    entries = [item for item in data["plugins"] if isinstance(item, dict) and item.get("name") == plugin_name]
     require(len(entries) == 1, "marketplace.json 必须恰好注册一次该插件")
     source = entries[0].get("source")
     require(isinstance(source, dict) and source.get("source") == "local", "插件 marketplace 来源必须为 local")
@@ -131,29 +128,46 @@ def check_marketplace(path: Path, package: Path) -> None:
 def check_package(package: Path, marketplace: Path | None = None) -> dict[str, int]:
     require(package.is_dir(), "插件目录不存在")
     package = package.resolve(strict=True)
-    for item in package.rglob("*"):
+    skill_dir = package / PLUGIN_NAME
+    require(skill_dir.is_dir(), "缺少根层 repo-to-spec Skill")
+    for item in skill_dir.rglob("*"):
         require_inside(package, item)
-    manifest_path = package / "plugin.json"
+    manifest_path = package / ".codex-plugin" / "plugin.json"
     require_inside(package, manifest_path)
-    require(manifest_path.is_file(), "缺少 plugin.json")
+    require(manifest_path.is_file(), "缺少 .codex-plugin/plugin.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    schema = json.loads(SCHEMA_FILE.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(manifest))
-    require(not errors, f"plugin.json 不符合 Agent Plugins 1.0.0 schema：{errors[0].message}" if errors else "")
-    require(bool(SKILL_NAME.fullmatch(manifest["name"])), "plugin.json name 必须为 kebab-case")
-    require(manifest["name"] == package.name, "plugin.json name 必须与插件目录名一致")
+    require(isinstance(manifest, dict), "plugin.json 必须为对象")
+    for key in ("name", "version", "description"):
+        require(isinstance(manifest.get(key), str) and bool(manifest[key].strip()),
+                f"plugin.json {key} 必须为非空文本")
+    require(manifest["name"] == PLUGIN_NAME, "plugin.json name 与 Skill 名称不一致")
+    require(manifest.get("skills") == "./", "plugin.json skills 必须指向仓库根目录 ./")
+    author = manifest.get("author")
+    require(isinstance(author, dict) and isinstance(author.get("name"), str) and bool(author["name"].strip()),
+            "plugin.json author.name 必须为非空文本")
+    interface = manifest.get("interface")
+    require(isinstance(interface, dict), "plugin.json interface 必须为对象")
+    for key in ("displayName", "shortDescription", "longDescription", "developerName", "category"):
+        require(isinstance(interface.get(key), str) and bool(interface[key].strip()),
+                f"plugin.json interface.{key} 必须为非空文本")
+    for key in ("capabilities", "defaultPrompt"):
+        value = interface.get(key)
+        require(isinstance(value, list) and bool(value) and all(isinstance(item, str) and item.strip()
+                                                                for item in value),
+                f"plugin.json interface.{key} 必须为非空文本列表")
 
-    skills = sorted((package / "skills").glob("*/SKILL.md"))
-    all_skills = sorted((package / "skills").rglob("SKILL.md"))
-    require(len(skills) == len(all_skills) == 1,
-            "必须有且只有一个位于 skills/<name>/SKILL.md 的可发现入口")
+    skills = sorted(path / "SKILL.md" for path in package.iterdir()
+                    if path.is_dir() and (path / "SKILL.md").exists())
+    all_skills = sorted(skill_dir.rglob("SKILL.md"))
+    require(skills == all_skills == [skill_dir / "SKILL.md"],
+            "必须有且只有一个位于根层 repo-to-spec/SKILL.md 的入口")
     skill = skills[0]
     require_inside(package, skill)
     metadata = parse_frontmatter(skill.read_text(encoding="utf-8"))
     require(metadata["name"] == skill.parent.name, "Skill frontmatter name 必须与目录名一致")
-    markdown_files = check_package_links(package)
+    markdown_files = check_package_links(package, skill_dir)
     if marketplace is not None:
-        check_marketplace(marketplace, package)
+        check_marketplace(marketplace, package, manifest["name"])
     return {"skills": len(skills), "markdown_files": markdown_files}
 
 
@@ -182,48 +196,55 @@ def self_test() -> None:
 
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
-        package = root / "plugins" / "demo"
-        skill_dir = package / "skills" / "demo"
+        package = root / "package"
+        package.mkdir()
+        skill_dir = package / "repo-to-spec"
         skill_dir.mkdir(parents=True)
-        (package / "plugin.json").write_text(
-            json.dumps({"$schema": PLUGIN_SCHEMA, "name": "demo"}), encoding="utf-8"
-        )
-        (skill_dir / "SKILL.md").write_text(valid + "[ref](../../reference.md)\n", encoding="utf-8")
-        (package / "reference.md").write_text("# Reference\n", encoding="utf-8")
-        marketplace = root / ".agents" / "plugins" / "marketplace.json"
+        manifest = package / ".codex-plugin" / "plugin.json"
+        manifest.parent.mkdir()
+        valid_manifest = {"name": PLUGIN_NAME, "version": "0.1.0", "description": "demo",
+                          "skills": "./", "author": {"name": "Demo"},
+                          "interface": {"displayName": "Demo", "shortDescription": "Demo",
+                                        "longDescription": "Demo", "developerName": "Demo",
+                                        "category": "Productivity", "capabilities": ["Read"],
+                                        "defaultPrompt": ["Demo"]}}
+        manifest.write_text(json.dumps(valid_manifest), encoding="utf-8")
+        (skill_dir / "SKILL.md").write_text(valid.replace("demo", PLUGIN_NAME) + "[ref](references/guide.md)\n", encoding="utf-8")
+        (skill_dir / "references").mkdir()
+        (skill_dir / "references" / "guide.md").write_text("# Reference\n", encoding="utf-8")
+        marketplace = package / ".agents" / "plugins" / "marketplace.json"
         marketplace.parent.mkdir(parents=True)
         marketplace.write_text(json.dumps({"plugins": [{
-            "name": "demo", "source": {"source": "local", "path": "./plugins/demo"},
+            "name": PLUGIN_NAME, "source": {"source": "local", "path": "./"},
             "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
             "category": "Productivity"
         }], "name": "demo-local", "interface": {"displayName": "Demo"}}), encoding="utf-8")
         assert check_package(package, marketplace)["skills"] == 1
-        manifest = package / "plugin.json"
-        for field, value in (("$schema", "schema.json"), ("name", "Bad Name"),
-                             ("version", 123), ("description", [])):
-            data = {"$schema": PLUGIN_SCHEMA, "name": "demo", field: value}
+        for field, value in (("name", "Bad Name"), ("version", 123),
+                             ("description", []), ("skills", "./skills"), ("interface", [])):
+            data = {**valid_manifest, field: value}
             manifest.write_text(json.dumps(data), encoding="utf-8")
             reject(lambda: check_package(package, marketplace), f"invalid manifest {field} must fail")
-        manifest.write_text(json.dumps({"$schema": PLUGIN_SCHEMA, "name": "demo"}), encoding="utf-8")
+        manifest.write_text(json.dumps(valid_manifest), encoding="utf-8")
         skill = skill_dir / "SKILL.md"
-        skill.write_text('---\nname: "demo"\ndescription: |\n  Sample skill\n---\n[ref](../../reference.md)\n', encoding="utf-8")
+        skill.write_text('---\nname: "repo-to-spec"\ndescription: |\n  Sample skill\n---\n[ref](references/guide.md)\n', encoding="utf-8")
         assert check_package(package, marketplace)["skills"] == 1
-        skill.write_text(valid + "[ref](../../reference.md)\n", encoding="utf-8")
-        (package / "skills" / "extra").mkdir()
-        (package / "skills" / "extra" / "SKILL.md").write_text(valid.replace("demo", "extra"), encoding="utf-8")
+        skill.write_text(valid.replace("demo", PLUGIN_NAME) + "[ref](references/guide.md)\n", encoding="utf-8")
+        (package / "extra").mkdir()
+        (package / "extra" / "SKILL.md").write_text(valid.replace("demo", "extra"), encoding="utf-8")
         reject(lambda: check_package(package, marketplace), "multiple skill entry points must fail")
-        (package / "skills" / "extra" / "SKILL.md").unlink()
-        nested = package / "skills" / "nested" / "hidden" / "SKILL.md"
+        (package / "extra" / "SKILL.md").unlink()
+        nested = skill_dir / "nested" / "hidden" / "SKILL.md"
         nested.parent.mkdir(parents=True)
         nested.write_text(valid, encoding="utf-8")
         reject(lambda: check_package(package, marketplace), "undiscoverable nested skill must fail")
         nested.unlink()
-        skill.write_text(valid + "[outside](../../../outside.md)\n", encoding="utf-8")
+        skill.write_text(valid.replace("demo", PLUGIN_NAME) + "[outside](../../outside.md)\n", encoding="utf-8")
         reject(lambda: check_package(package, marketplace), "package links escaping the package must fail")
-        skill.write_text(valid, encoding="utf-8")
+        skill.write_text(valid.replace("demo", PLUGIN_NAME), encoding="utf-8")
         outside = root / "outside.md"
         outside.write_text(valid, encoding="utf-8")
-        for target in (manifest, skill, package / "reference.md"):
+        for target in (manifest, skill, skill_dir / "references" / "guide.md"):
             original = target.read_bytes()
             target.unlink()
             target.symlink_to(outside)

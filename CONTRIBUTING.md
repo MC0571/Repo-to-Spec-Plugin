@@ -110,7 +110,7 @@ Repo-to-Spec 的公开交付目标是形成可供独立团队直接使用的系�
 
 ### 插件与技能格式
 
-提供可安装插件时，遵循 [Agent Plugins 规范](https://agent-plugins.org/specification)：在插件根目录提供 `plugin.json`，设置必需的 `$schema` 和 `name`；技能放在 `skills/<skill-name>/SKILL.md`，MCP 服务配置放在根目录的 `mcp.json`（仅在提供服务时需要）。客户端专有内容使用规范定义的扩展机制，不替代可移植格式。
+本仓库根目录就是 Codex 插件根目录：`.codex-plugin/plugin.json` 声明插件，`repo-to-spec/SKILL.md` 是唯一的 Skill 入口，并由清单的 `skills: "./"` 发现。修改安装布局时核对 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)并实际测试新会话加载。不要把 Codex 兼容清单误称为可移植 Agent Plugins 根清单。
 
 每个技能遵循 [Agent Skills 规范](https://agentskills.io/specification)：`SKILL.md` 包含 YAML frontmatter 和正文，至少声明与目录名一致的 `name`，以及说明能力和适用场景的 `description`。
 
@@ -147,8 +147,8 @@ Repo-to-Spec 的公开交付目标是形成可供独立团队直接使用的系�
 - `VISION.md`：项目动机、目标状态、产品承诺和长期设计原则；
 - `CONTRIBUTING.md`：开发、测试、文档和 PR 流程；
 - `AGENTS.md`：编程智能体必须遵守的仓库级硬约束；
-- `ARCHITECTURE.md`：Skill-led 执行边界；`plugins/repo-to-spec/`：可安装插件、唯一用户入口及按需引用的专业材料；
-- `docs/`：当前状态与验证结果入口，并保留旧设计基线的历史档案，详见 [文档入口](./docs/README.md)。
+- `.codex-plugin/plugin.json` 与 `repo-to-spec/`：可安装插件、唯一用户入口及按需引用的专业材料；
+- `scripts/` 与 `.github/workflows/ci.yml`：插件和仓库检查，不是分发 Skill 的运行依赖。
 
 使用简短工作记录跟踪需要跨上下文继续的任务。Issue、Milestone、能力编号和登记表不是本仓库日常实现的前置要求；只在具体协作确有需要时采用工作跟踪工具。
 

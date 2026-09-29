@@ -19,8 +19,8 @@
 ```sh
 python3 -m venv .venv
 .venv/bin/python -m pip install -r scripts/check-requirements.txt
-.venv/bin/python scripts/check_design.py
-.venv/bin/python scripts/check_design.py --self-test
+.venv/bin/python scripts/check_plugin.py
+.venv/bin/python scripts/check_plugin.py --self-test
 ```
 
 这些开发依赖不属于分发插件的运行依赖。
@@ -43,7 +43,7 @@ python3 -m venv .venv
 - 不要根据“通常如此”补写目标产品行为。材料不足或互相冲突时，继续调查或保留未决状态；最终交付前必须解决所有会影响独立实施的重要问题。
 - 明确区分“规范必须保持的结果与约束”和“新实现可以自主选择的实现方式”。
 - 保持一个统一 Skill 用户入口；入口保持简洁，仅在当前任务需要时加载专业流程、工具说明、模板和检查规则。
-- 新增或修改插件、技能时，按 `CONTRIBUTING.md` 的“插件与技能格式”及其中链接的标准核对结构、元数据和实际验证结果。
+- 新增或修改插件、技能时，按 `CONTRIBUTING.md` 的“插件与技能格式”核对根目录兼容清单、唯一 Skill、资源引用和实际宿主加载。
 - 核心行为不得依赖未声明的外部环境才能成立。
 
 ## 约定
@@ -106,7 +106,7 @@ python3 -m venv .venv
 - 长期目标与产品原则：`VISION.md`
 - 开发流程、测试与 PR 要求：`CONTRIBUTING.md`
 - 英文项目说明：`README_EN.md`
-- Skill-led 执行边界：`ARCHITECTURE.md`；旧阶段路线图已标为历史：`ROADMAP.md`
-- 插件方法、工具指引、输出标准、模板和自查：`plugins/repo-to-spec/skills/repo-to-spec/`；历史设计入口：`docs/README.md`
+- 插件清单与统一 Skill：`.codex-plugin/plugin.json`、`repo-to-spec/SKILL.md`
+- 按需方法、工具指引、输出标准、模板和自查：`repo-to-spec/references/`、`repo-to-spec/assets/`
 
 新增长期有效的架构、数据模型、接口或安全文档后，只在这里增加索引，不复制全文。

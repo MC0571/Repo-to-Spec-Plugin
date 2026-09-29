@@ -28,5 +28,5 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install -r scripts/check-requirements.txt
-          .venv/bin/python scripts/check_design.py
-          .venv/bin/python scripts/check_design.py --self-test
+          .venv/bin/python scripts/check_plugin.py
+          .venv/bin/python scripts/check_plugin.py --self-test

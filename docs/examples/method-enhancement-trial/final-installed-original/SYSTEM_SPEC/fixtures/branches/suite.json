@@ -1,1 +1,0 @@
-{"target": "T", "trigger_cases": [{"case_id": "p", "expected": "should_trigger"}, {"case_id": "n", "expected": "should_not_trigger"}, {"case_id": "e", "expected": "edge_case"}, {"case_id": "s", "expected": "sibling", "sibling_target": "S"}, {"case_id": "u", "expected": "other"}]}

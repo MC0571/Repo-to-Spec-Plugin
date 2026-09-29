@@ -1,0 +1,22 @@
+{
+  "name": "repo-to-spec",
+  "version": "0.1.0",
+  "description": "从参考仓库恢复产品、体验与必要技术设计，交付可独立实施的系统规格套件。",
+  "skills": "./",
+  "author": {
+    "name": "Repo-to-Spec Contributors"
+  },
+  "repository": "https://github.com/MC0571/Repo-to-Spec-Plugin",
+  "license": "Apache-2.0",
+  "interface": {
+    "displayName": "Repo-to-Spec",
+    "shortDescription": "从参考仓库生成可独立实施的系统规格",
+    "longDescription": "由宿主 Agent 调查参考仓库并恢复产品、体验与必要逻辑技术设计，交付声明范围内自包含的 SYSTEM_SPEC/。支持完整产品和选择性吸收。",
+    "developerName": "Repo-to-Spec Contributors",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "用 Repo-to-Spec 分析我提供的参考仓库与目标范围，交付可脱离来源仓库实施的 SYSTEM_SPEC/。"
+    ]
+  }
+}

@@ -88,37 +88,32 @@ Repo-to-Spec is not:
 
 This project does not determine whether a particular repository's license, additional terms, or policies permit a specific use. It does not provide legal advice or guarantee that generated specifications or later implementations are automatically authorized. Users remain responsible for applicable licensing, contractual, and compliance requirements.
 
-## Project documentation
+## Repository contents
 
-- [VISION.md](./VISION.md): project motivation, target state, product commitments, and long-term design principles.
-- [ARCHITECTURE.md](./ARCHITECTURE.md): execution boundaries and delivery flow for the Skill-led plugin.
-- [ROADMAP.md](./ROADMAP.md): the former phased roadmap is historical; current work follows the plugin and actual validation results.
-- [Design documentation](./docs/README.md): current implementation entry points, verification scope, and historical design records.
-- [CONTRIBUTING.md](./CONTRIBUTING.md): contribution workflow, quality requirements, and plugin/skill format conventions.
-- [AGENTS.md](./AGENTS.md): hard constraints for coding agents working in this repository.
+The repository root is the Codex plugin root. [`.codex-plugin/plugin.json`](./.codex-plugin/plugin.json) declares the plugin, and the single [Skill](./repo-to-spec/SKILL.md) lives directly under `repo-to-spec/`. Its `references/` and `assets/` provide methods, task scenarios, tool procedures, output standards, and templates on demand. The host agent performs the work; there is no separate runtime or required third-party investigation tool.
 
-The README is limited to public positioning and delivery boundaries. Architecture, data models, and implementation plans belong in dedicated design documents rather than being duplicated here.
+[VISION.md](./VISION.md) preserves the product goal. [CONTRIBUTING.md](./CONTRIBUTING.md) and [AGENTS.md](./AGENTS.md) define repository maintenance, safety, and checks. Historical phase designs, work registries, and trial archives were removed from the current tree and remain available in Git history.
 
-## Status
-
-The repository contains an installable plugin package with one unified Skill entry and on-demand methods for capability boundaries, recovery, UI and visual behavior, data and interfaces, implementation independence, selective adoption, and specification review. It also includes task scenarios for whole products, UI flows, CLI/API, asynchronous work, SDKs, and adoption into an existing product, with question-driven tool procedures, fillable specification examples, and teaching cases. The host Agent performs the work; no separate runtime is required.
-
-Package structure and metadata checks do not establish real host loading, sample specification quality, or independent consumption. See [current status and verification records](./docs/README.md) for results and uncovered areas. The former S1–S6, Cxx, M0–M6, and Axx baseline and roadmap remain historical records, not an implementation checklist.
+Structural checks can verify the manifest, Skill, resource links, and repository links. They cannot prove that the specification is complete or that a host loaded the plugin. The host verification scope for this layout is stated below.
 
 ## Install and use
 
-The local marketplace in `.agents/plugins/marketplace.json` registers `Repo-to-Spec Local`. From the repository root, install it with Codex CLI:
+The local [marketplace](./.agents/plugins/marketplace.json) points at the repository root. From the repository root, install it with Codex CLI:
 
 ```sh
 codex plugin marketplace add .
 codex plugin add repo-to-spec@repo-to-spec-local
 ```
 
-Start a new session and invoke `$repo-to-spec`. Installation, fresh-session loading, and a sample run were verified with Codex CLI `0.158.0-alpha.2.1`; see the [run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md). The [OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins) also describes installation through the desktop Plugins Directory. Desktop loading has not been tested here.
+Start a new session and invoke `$repo-to-spec`. Codex CLI `0.158.0-alpha.2.1` installed this layout in an isolated directory and discovered the Skill. The [OpenAI plugin packaging guide](https://developers.openai.com/plugins/build/plugins) also describes desktop Plugins Directory installation. Desktop loading has not been tested here.
+
+Local marketplace installation copies the current repository working tree. Install from a clean checkout without private files or secrets to avoid copying untracked or ignored files into the plugin cache.
 
 Provide the repository location, target scope, intended environment, and necessary product context. For example: “Use Repo-to-Spec to analyze the import capability in `/path/to/reference-repo` for a local desktop product. Preserve the existing user interaction, include necessary dependencies, and deliver a `SYSTEM_SPEC/` that can be implemented without the source repository.”
 
-The [bundled static pre-check specification](./plugins/repo-to-spec/examples/skill-pack-validation/SYSTEM_SPEC/) and [initial run record](./docs/examples/SKILL-PACK-VALIDATION-RUN.md) preserve an independent-consumer review. The [fresh-session specification](./docs/examples/installed-cli-run/SYSTEM_SPEC/) and [installation run record](./docs/examples/INSTALLED-PLUGIN-VALIDATION-RUN.md) cover earlier host loading and a missing-material case. The deeper methods were [initially trialed](./docs/examples/METHOD-DEPTH-VALIDATION-RUN.md) on trigger evaluation; this round's [installed fresh-session trial](./docs/examples/METHOD-ENHANCEMENT-VALIDATION-RUN.md) preserves raw output, reviewed corrections, an insufficient-input contrast, and a narrower rerun after method feedback. These checks cover only narrow capabilities without graphical interfaces.
+Earlier trials of narrow, non-UI capabilities and independent consumption checks used the former package layout. Their raw records remain in Git commit `0919f72`; they do not verify installation of this new layout. Whole-product and UI scenarios have not been shown stable by these trials.
+
+**Layout verification (2026-09-29):** After installation into a fresh isolated `CODEX_HOME`, a new session read `repo-to-spec/SKILL.md` and `references/investigation.md` from the installed cache. With no reference repository supplied, it identified the missing inputs and did not invent a `SYSTEM_SPEC/`. This verifies Codex CLI installation, resource reads, and that missing-input branch; desktop loading and full specification generation with this layout remain unverified.
 
 ## Contributing
 

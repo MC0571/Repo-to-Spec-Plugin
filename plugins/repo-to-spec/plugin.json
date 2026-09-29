@@ -1,7 +1,0 @@
-{
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "repo-to-spec",
-  "version": "0.1.0",
-  "description": "从参考仓库恢复产品、体验与必要技术设计，交付可独立实施的系统规格套件。",
-  "license": "Apache-2.0"
-}
