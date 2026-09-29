@@ -1,0 +1,1 @@
+{"target": [true, {"a": 1}], "trigger_cases": [{"case_id": "a", "expected": []}, {"case_id": "b", "expected": {}}, {"case_id": "c", "expected": false}]}

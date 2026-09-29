@@ -1,0 +1,4 @@
+{"case_id": null, "selected_skill": {"x": [true, null]}, "run": null}
+{"case_id": 1, "selected_skill": ["x", false, null, {"a": "it's", "b": "a\"b", "c": "both'\"", "d": "\t\n\\\u0001 字"}], "run": {"r": [false]}}
+{"case_id": "raw|\n字", "selected_skill": ["x"], "run": [1, 2]}
+{"case_id": "quote", "selected_skill": "A|\nB", "run": false}

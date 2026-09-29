@@ -1,0 +1,1 @@
+{"target": {"x": [true, null]}, "trigger_cases": [{"case_id": null, "expected": null}, {"case_id": true, "expected": 42}, {"case_id": "raw|\n字", "expected": "sibling", "sibling_target": ["x"]}, {"case_id": "quote", "expected": "what"}]}

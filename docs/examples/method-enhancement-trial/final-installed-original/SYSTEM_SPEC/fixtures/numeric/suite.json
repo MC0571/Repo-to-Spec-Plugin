@@ -1,0 +1,1 @@
+{"target": true, "trigger_cases": [{"case_id": 1, "expected": "should_trigger"}, {"case_id": 1.0, "expected": "edge_case"}, {"case_id": "float", "expected": "sibling"}]}
