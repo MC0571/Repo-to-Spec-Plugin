@@ -88,23 +88,32 @@ Repo-to-Spec 不是：
 
 本项目也不判断特定仓库的许可证、附加条款或其他政策是否允许某项具体使用，不提供法律意见，也不保证生成规格或后续实现自动取得任何授权。使用者仍需自行确认适用的许可、合同和合规要求。
 
-## 项目文档
+## 仓库内容
 
-- [VISION.md](./VISION.md)：项目动机、目标状态、产品承诺与长期设计原则。
-- [ARCHITECTURE.md](./ARCHITECTURE.md)：完整目标架构与系统边界。
-- [ROADMAP.md](./ROADMAP.md)：按能力依赖组织的建设与验证路径。
-- [GitHub Issues](https://github.com/MC0571/Repo-to-Spec-Plugin/issues)：当前可执行工作及进展。
-- [设计文档入口](./docs/README.md)：领域模型、执行协议、套件格式提案、质量与决策记录。
-- [CONTRIBUTING.md](./CONTRIBUTING.md)：贡献流程、质量要求和插件/技能格式约定。
-- [AGENTS.md](./AGENTS.md)：编程智能体在本仓库中工作的硬约束。
+仓库根目录就是 Codex 插件。 [`.codex-plugin/plugin.json`](./.codex-plugin/plugin.json) 声明插件；[统一 Skill](./repo-to-spec/SKILL.md) 位于根层 `repo-to-spec/`，通过其 `references/` 和 `assets/` 按需读取方法、场景、工具操作、输出标准与模板。宿主 Agent 执行工作，插件没有独立运行时或必装的第三方调查工具。
 
-README 只说明公开定位和交付边界；具体架构、数据模型和实施方案在相应设计文档中维护，不在这里重复。
+[VISION.md](./VISION.md) 保留长期产品目标；[CONTRIBUTING.md](./CONTRIBUTING.md) 和 [AGENTS.md](./AGENTS.md) 说明仓库维护、安全与检查边界。旧阶段设计、工作登记和试跑档案已从当前目录移除，可从 Git 历史查看。
 
-## 当前状态
+结构检查只能核对清单、Skill、资源引用与仓库链接；它不能证明规格内容完整或某个宿主已成功加载。当前布局的宿主验证范围见下文。
 
-项目正在从目标状态反推插件、技能和运行能力的设计。仓库已有基础 CI 和设计登记表检查；尚未提供可安装插件、正式生成命令或经过产品级验证的系统规格生成能力。
+## 安装与使用
 
-README 描述稳定的产品定位；[VISION.md](./VISION.md) 描述目标状态；[M0 设计基线](./docs/reviews/M0-ADOPTION.md)已在限定范围内采纳，不代表产品能力实现或全部详细设计获批。源快照见 [当前状态](./docs/CURRENT-STATE.md)，目标能力进展见 [能力地图](./docs/planning/CAPABILITY-MAP.md)。
+本地插件市场在 [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json) 注册仓库根目录。在仓库根目录用 Codex CLI 安装：
+
+```sh
+codex plugin marketplace add .
+codex plugin add repo-to-spec@repo-to-spec-local
+```
+
+随后开启新会话并调用 `$repo-to-spec`。此布局已用 Codex CLI `0.158.0-alpha.2.1` 在隔离目录安装并发现 Skill。桌面端可按 [OpenAI 插件打包说明](https://developers.openai.com/plugins/build/plugins)在 Plugins Directory 安装；本仓库尚未实测桌面端加载。
+
+本地市场安装会复制当前仓库工作区；安装前请使用不含私有文件和秘密的干净检出，避免把未跟踪或忽略的文件一同复制到插件缓存。
+
+开始时提供仓库位置、目标范围、目标使用环境和必要产品上下文，例如：“用 Repo-to-Spec 分析 `/path/to/reference-repo` 的导入能力，面向本地桌面产品，保留原有用户交互；请覆盖必要依赖并交付可脱离来源仓库实施的 `SYSTEM_SPEC/`。”
+
+此前在旧包布局下完成过真实仓库的局部、无 UI 场景试跑和独立消费检查；相关原始记录保留在 Git 提交 `0919f72`，不作为新布局的安装验证。新布局尚未证明完整产品或 UI 场景的稳定性。
+
+**本次布局验证（2026-09-29）：**在新的隔离 `CODEX_HOME` 安装本仓库后，新会话从安装缓存读取了 `repo-to-spec/SKILL.md` 和 `references/investigation.md`。缺少参考仓库的请求被正确标为输入不足，没有伪造 `SYSTEM_SPEC/`。这验证了 Codex CLI 的安装、资源读取与该缺输入分支；未验证桌面端或新布局下的完整规格生成。
 
 ## 贡献
 

@@ -24,7 +24,9 @@ jobs:
           CI_DIFF_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           CI_PR_TITLE: ${{ github.event.pull_request.title }}
         run: python3 scripts/ci_check.py
-      - name: Check design baseline
+      - name: Check plugin package
         run: |
-          python3 scripts/check_design.py
-          python3 scripts/check_design.py --self-test
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r scripts/check-requirements.txt
+          .venv/bin/python scripts/check_plugin.py
+          .venv/bin/python scripts/check_plugin.py --self-test
