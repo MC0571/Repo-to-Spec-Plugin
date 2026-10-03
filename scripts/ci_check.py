@@ -38,21 +38,23 @@ def markdown_targets(text):
             fence_char, fence_size = fence.group(1)[0], len(fence.group(1))
             continue
         # ponytail: single-line code spans suffice here; use a Markdown parser if multiline spans matter.
-        runs = []
-        for match in BACKTICKS.finditer(line):
-            prefix = line[:match.start()]
-            escaped = (len(prefix) - len(prefix.rstrip("\\"))) % 2
-            if match.start() + escaped < match.end():
-                runs.append((match.start() + escaped, match.end()))
+        runs = [(match.start(), match.end()) for match in BACKTICKS.finditer(line)]
         code_spans = []
         index = 0
         while index < len(runs):
+            start, end = runs[index]
+            prefix = line[:start]
+            start += (len(prefix) - len(prefix.rstrip("\\"))) % 2
+            if start == end:
+                index += 1
+                continue
+            # Backslashes escape openers, but are literal inside a code span.
             closing = next((candidate for candidate in range(index + 1, len(runs))
-                            if runs[candidate][1] - runs[candidate][0] == runs[index][1] - runs[index][0]), None)
+                            if runs[candidate][1] - runs[candidate][0] == end - start), None)
             if closing is None:
                 index += 1
                 continue
-            code_spans.append((runs[index][0], runs[closing][1]))
+            code_spans.append((start, runs[closing][1]))
             index = closing + 1
         for pattern in (LINK, REFERENCE):
             for match in pattern.finditer(line):
@@ -121,6 +123,10 @@ def self_test():
     assert list(markdown_targets("[x](a`b`.md)")) == ["a`b`.md"]
     assert list(markdown_targets("`[real](missing.md)``")) == ["missing.md"]
     assert list(markdown_targets(r"\`[real](missing.md)\`")) == ["missing.md"]
+    assert list(markdown_targets(r"`C:\` [guide](missing.md) `file.txt`")) == ["missing.md"]
+    assert list(markdown_targets(r"`[sample](missing.md)\` [real](./a.md)")) == ["./a.md"]
+    assert not list(markdown_targets(r"\``[sample](missing.md)`"))
+    assert not list(markdown_targets(r"\\`[sample](missing.md)`"))
     assert not list(markdown_targets("[x `code](missing.md)`"))
     assert list(markdown_targets("[`code`](missing.md)")) == ["missing.md"]
     assert list(markdown_targets("[x `code` y](missing.md)")) == ["missing.md"]
